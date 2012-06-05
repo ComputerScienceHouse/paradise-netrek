@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# backup the database.
+#
+# first argument is the old playerfile, if a second argument exists it is
+# assumed to be NETREKDIR
+#
+
+NETREKDIR=@NETREKDIR@
+
+if [ X$1 != X ]; then
+        NETREKDIR=$1
+fi
+
+export NETREKDIR
+
+DATE=`date +"%m-%d-%y"`
+
+if [ ! -f ${NETREKDIR}/etc/db.players -o ! ${NETREKDIR}/etc/db.global ]; then
+	echo "$0: Database not found, exiting."
+	echo "$0: (expecting: ${NETREKDIR}/etc/db.players and ${NETREKDIR}/db.global)"
+	exit 1
+fi
+
+if [ ! -d ${NETREKDIR}/backups ]; then
+	echo "$0: ${NETREKDIR}/backups directory not found, exiting."
+	exit 1
+fi
+
+echo "$0: creating ${NETREKDIR}/backups/db.players-${DATE}"
+cp ${NETREKDIR}/etc/db.players ${NETREKDIR}/backups/db.players-${DATE}
+
+echo "$0: gzipping ${NETREKDIR}/backups/db.players-${DATE}"
+gzip -9 ${NETREKDIR}/backups/db.players-${DATE}
+
+echo "$0: creating ${NETREKDIR}/backups/db.global-${DATE}"
+cp ${NETREKDIR}/etc/db.global ${NETREKDIR}/backups/db.global-${DATE}
+
+# don't bother zipping the globals, they are piddly
+
+echo "$0: Done."

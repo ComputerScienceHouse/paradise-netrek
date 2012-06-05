@@ -1,0 +1,161 @@
+# NetrekII: Paradise Client Makefile
+#
+
+SHELL=/bin/sh
+
+# Set some commonly used variables.
+@SET_MAKE@
+
+bindir=@bindir@
+datadir=@datadir@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+libexecdir=@libexecdir@
+mandir=@mandir@
+prefix=@prefix@
+srcdir=@srcdir@
+
+INCLUDES=-I../include
+
+CPPFLAGS=$(INCLUDES) @CPPFLAGS@
+DEFS=@DEFS@
+ZLIB=@ZLIB@
+XPMLIB=@XPMLIB@
+LDFLAGS=@LDFLAGS@
+VPATH=@srcdir@
+
+CC=@CC@
+CPP=@CPP@
+X_CFLAGS=@X_CFLAGS@
+X_PRE_LIBS=@X_PRE_LIBS@
+X_LIBS=@X_LIBS@
+X_EXTRA_LIBS=@X_EXTRA_LIBS@
+
+# auth stuff
+PERL=@PERL@
+AUTH_SRCS=@AUTH_SRCS@
+AUTH_OBJS=@AUTH_OBJS@
+AUTH_LIBS=@AUTH_LIBS@
+AUTH_DEFS=@AUTH_DEFS@
+SCRAMBLER=@SCRAMBLER@
+
+CDEFS=-DUNIX_SOUND -DSHIP_BITMAP_PATH=\"@SHIP_BITMAP_PATH@\"
+
+LIBS=$(LDFLAGS) $(AUTH_LIBS) $(XPMLIB) $(X_LIBS) $(X_PRE_LIBS) @LIBS@ $(X_EXTRA_LIBS) -lXmu -lX11 $(ZLIB) -lm
+CFLAGS=$(AUTH_DEFS) $(CDEFS) $(DEFS) $(X_CFLAGS) @CFLAGS@
+
+###########################################################################
+
+OBJS = ${AUTH_OBJS} \
+       beeplite.o \
+       blk_parsemotd.o \
+       colors.o \
+       credits.o \
+       dashboard.o \
+       data.o \
+       death.o \
+       defaults.o \
+       defwin.o \
+       detonate.o \
+       distress.o \
+       dmessage.o \
+       enter.o \
+       feature.o \
+       findslot.o \
+       gameconf.o \
+       getname.o \
+       getship.o \
+       helpwin.o \
+       hockey.o \
+       images.o \
+       inform.o \
+       input.o \
+       interface.o \
+       keymap.o \
+       lib.o \
+       local.o \
+       macros.o \
+       macrowin.o \
+       main.o \
+       map.o \
+       motdwin.o \
+       newstats.o \
+       newwin.o \
+       option.o \
+       packets.o \
+       parsemeta.o \
+       ping.o \
+       pingstats.o \
+       planetlist.o \
+       planets.o \
+       playerlist.o \
+       ranklist.o \
+       ratings.o \
+       recorder.o \
+       redraw.o \
+       rotate.o \
+       senddist.o \
+       shortcomm.o \
+       sintab.o \
+       smessage.o \
+       socket.o \
+       sound.o \
+       spopt.o \
+       stats.o \
+       tools.o \
+       udpopt.o \
+       util.o \
+       varydamage.o \
+       war.o \
+       warning.o \
+       wide_plist.o \
+       x11window.o
+
+
+###########################################################################
+
+all:	netrek.paradise
+
+help:
+	@echo "Use make <parameter> where <parameter> can be:"; \
+	echo "	netrek.pardise		binary."; \
+	echo "	static_images		Configure to include images in binary."; \
+	echo "	dynamic_images		Configure to dynamically load images (default)."
+
+###########################################################################
+
+paradise.sndsrv.linux: paradise.sndsrv.linux.c
+	rm -f $(EXE)
+	$(CC) $(CFLAGS) -o $(EXE) $@.c
+
+paradise.sndsrv.freebsd: paradise.sndsrv.freebsd.c
+	rm -f $(EXE)
+	$(CC) $(CFLAGS) -o $(EXE) $@.c
+
+netrek.paradise: $(OBJS)
+	$(CC) $(CFLAGS) -o netrek.paradise `$(SCRAMBLER) $(OBJS)` $(X11LIB) $(LIBS)
+
+install: generic
+	rm -f ../$(EXE)
+	cp -f $(EXE) ../$(EXE)
+
+static_images:
+	$(SCRIPTDIR)/mkimgsrc -c $(IMAGEDIR)
+	$(SCRIPTDIR)/mkcredits -c $(IMAGEDIR)
+	@touch static_images
+	-rm -f dynamic_images
+
+dynamic_images:
+	$(SCRIPTDIR)/mkimgsrc $(IMAGEDIR)
+	$(SCRIPTDIR)/mkcredits -c $(IMAGEDIR)
+	@touch dynamic_images
+	-rm -f static_images
+
+unused_images:
+	$(SCRIPTDIR)/unused_images images.h $(SRCS)
+
+clean:
+	-rm -f netrek.paradise *.o rsa/*.o
+
+distclean:
+	-rm -f Makefile expire.c

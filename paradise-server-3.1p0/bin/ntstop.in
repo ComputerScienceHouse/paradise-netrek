@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# shut down the server
+#
+# since we don't know who may execute this (if it is called from the system
+# upon a machine shutdown, for instance), use ../directory notation
+# rather than ${NETREKDIR}, assuming it is executed in ${NETREKDIR}/bin
+#
+# This will blast the daemon and listen process, it will NOT blast any
+# ntserv processes (wait for them to disconnect or do these by hand)
+#
+# if an argument exists it is taken as the NETREKDIR
+#
+
+NETREKDIR=@NETREKDIR@
+
+if [ X$1 != X ]; then
+        NETREKDIR=$1
+fi
+
+export NETREKDIR
+
+SYSTEM=`hostname`
+
+echo "" > /tmp/$$.ntstop
+echo "${USER}@${SYSTEM}:    ******* IMMINENT SYSTEM SHUTDOWN! *******" >> /tmp/$$.ntstop
+echo "${USER}@${SYSTEM}:    ******* IMMINENT SYSTEM SHUTDOWN! *******" >> /tmp/$$.ntstop
+echo "" >> /tmp/$$.ntstop
+
+mes="${NETREKDIR}/bin/mes"
+test -f $mes && $mes A -w < /tmp/$$.ntstop
+rm -f /tmp/$$.ntstop
+/bin/kill `cat ${NETREKDIR}/logs/listen.pid` 2> /dev/null
+/bin/kill `cat ${NETREKDIR}/logs/daemonII.pid` 2> /dev/null

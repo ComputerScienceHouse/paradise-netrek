@@ -1,0 +1,4 @@
+#define asteroid_width 5
+#define asteroid_height 5
+static unsigned char asteroid_bits[] = {
+   0x04, 0x0e, 0x1f, 0x0e, 0x04};

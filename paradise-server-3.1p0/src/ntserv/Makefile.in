@@ -1,0 +1,68 @@
+# Makefile.in for Paradise server src/common 3.1
+# @configure_input@
+
+@SET_MAKE@
+
+bindir=@bindir@
+datadir=@datadir@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+libexecdir=@libexecdir@
+mandir=@mandir@
+prefix=@prefix@
+srcdir=@srcdir@
+top_srcdir=@top_srcdir@
+
+AR=ar
+ARFLAGS=cruv
+RANLIB=@RANLIB@
+
+ZLIB=@ZLIB@
+
+CC=@CC@
+CPP=@CPP@
+
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@ -I../include @AUTH_DEFS@ @DEFS@
+LDFLAGS=@LDFLAGS@
+LIBS=@LIBS@ $(ZLIB) @AUTH_LIBS@ @CRYPTLIB@ -lm
+
+INSTALL=@INSTALL@
+INSTALL_SCRIPT=@INSTALL_SCRIPT@
+INSTALL_DATA=@INSTALL_DATA@
+
+AUTH_PROG=@AUTH_PROG@
+#AUTH_DEP_LIB=@AUTH_DEP_LIB@
+AUTH_DEP_VPATH=@AUTH_DEP_VPATH@
+
+VPATH=../common:../res-rsa
+
+####
+
+NTSERV_OBJS=cluecheck.o death.o fatudp.o feature.o findslot.o gameconf.o \
+            getentry.o getname.o input.o main.o message.o missile.o \
+	    packets.o parsexbm.o ping.o plasma.o redraw.o \
+	    reserved.o rsa-server.o \
+	    socket.o sockio.o timecheck.o warning.o
+
+all: ntserv
+
+ntserv: common.a robot.a $(NTSERV_OBJS)
+	if test "x$(AUTH_PROG)" = xkeycomp; then \
+	  if test -r ../res-rsa/librsa-gmp.a; then \
+	    $(CC) $(CFLAGS) -o ntserv $(NTSERV_OBJS) ../common/common.a ../common/robot.a ../res-rsa/librsa-gmp.a $(LIBS); \
+	  else \
+	    $(CC) $(CFLAGS) -o ntserv $(NTSERV_OBJS) ../common/common.a ../common/robot.a ../res-rsa/librsa.a $(LIBS); \
+	  fi \
+	else \
+	  $(CC) $(CFLAGS) -o ntserv $(NTSERV_OBJS) ../common/common.a ../common/robot.a $(LIBS); \
+	fi
+
+clean:
+	-rm -f ntserv $(NTSERV_OBJS)
+
+install:
+	$(INSTALL) ntserv $(prefix)/bin
+
+distclean:
+	-rm -f Makefile

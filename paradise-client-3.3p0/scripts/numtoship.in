@@ -1,0 +1,10 @@
+#! @PERL@
+#
+@shiptypes = ("SC","DD","CA","BB","AS","SB","AT","JS","FR","WB","CL","CV","UT","PT","PU");
+
+for($i = 0;$i <= 14;$i++) {
+  if(-e "C$i.xpm") {
+    print "C$i.xpm => $shiptypes[$i].xpm\n";
+    rename("C$i.xpm","$shiptypes[$i].xpm") if -e "C$i.xpm";
+  }
+}

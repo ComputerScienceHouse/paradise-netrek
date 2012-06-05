@@ -1,0 +1,52 @@
+(9/19/94:Brandon)
+
+This file is for people already experienced with the server, who may also
+be currently running their own server.  It only explains the changes from
+the administration of a 2.3 server to the administration of a 2.4 server.
+If you do not know how the server functions read the file README.Admin
+instead, as this file simply explains what is different from the old setup
+to this, and how to convert an old server's database and other config files
+to the new setup.
+
+The server now uses the NETREKDIR environment variable as a pointer to the
+root of the directory structure, rather than it being a pointer to the bin
+directory.  The various different directories are:
+
+   backups/      -- where the dbbackup script stores backup files.
+   bin/          -- the bin directory, this ONLY has binaries and scripts.
+   docs/         -- this documentation directory
+   etc/          -- where the configuration files, database files and
+                    other random files used by the server are stored.
+   logs/         -- where logfiles and pid files are stored.
+   pics/         -- where motd pictures can be stored, this is not enforced
+   pped/         -- Heath Kehoes player database editor.
+   rsa/          -- the RSA files, this directory is empty due to the
+                    copyrights involved with RSA.  If you desired RSA
+                    security you may be able to get the files, however
+                    it is not required to run the server (and very few
+                    people use it).
+   src/          -- where the source files are located.
+
+For the server to run as it did before adjust the following files
+appropriately:
+
+   Old Location          New Location          Notes
+   ------------          ------------          -----
+   bin/.global           etc/db.global
+   bin/.players          etc/db.players
+   bin/.hours            etc/conf.hours
+   bin/.pics             etc/conf.pics         adjust the paths accordingly. 
+   bin/.sysdef           etc/conf.sysdef
+   bin/.motd             etc/motd
+   bin/.motd.wc          etc/motd.wc
+   bin/.cluephrases      etc/cluephrases
+   bin/.rsa.keys         etc/rsa.keys
+
+Some other files you may want to be aware of are:
+
+   etc/conf.netrekdir    a 1 line file specifying the location of your
+                         NETREKDIR, which may be used by scripts and
+                         binaries if they cannot find the NETREKDIR
+                         environment variable.
+   logs/daemonII.pid     The process ID # of the current daemon running.
+   logs/listen.pid       The Process ID # of the latest listen process run.

@@ -1,0 +1,9 @@
+#! @PERL@
+
+srand;
+
+while (@ARGV) {
+	$i = rand(@ARGV);
+	print $ARGV[$i],"\n";
+	splice (@ARGV, $i,1);
+}

@@ -1,0 +1,4 @@
+#define flag_torp_width 3
+#define flag_torp_height 3
+static char flag_torp_bits[] = {
+   0x02, 0x07, 0x02};

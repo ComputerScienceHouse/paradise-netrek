@@ -1,0 +1,36 @@
+#
+
+# Make sure that these correctly indicate where the server source and bin
+# directories are:
+SERVDIR = ../
+BINDIR = ../../bin
+
+# This can also be set to gcc
+CC = cc
+
+# If you're on a SysV type system, put -DSYSV here:
+#CFLAGS = -O -I${SERVDIR}
+
+# Uncomment this line if youre on an HP/UX system:
+#CFLAGS = -O Aa -I${SERVDIR} -DSYSV -D_HPUX_SOURCE
+CFLAGS = -O -DHAVE_RAND48 -I../include -I.. -ltermcap
+
+OBJS = ppeddata.o db.o file.o interface.o main.o
+
+
+all: pped
+
+pped: ${OBJS}
+	${CC} ${CFLAGS} -o $@ ${OBJS} -lm -lcurses
+
+clean:
+	rm -f *.o *.bak core pped
+
+install: ${BINDIR}/pped
+
+${BINDIR}/pped: pped
+	-mv ${BINDIR}/pped ${BINDIR}/pped.old
+	-rm -f ${BINDIR}/pped.old
+	cp pped ${BINDIR}/pped
+	-chmod 700 ${BINDIR}/pped
+

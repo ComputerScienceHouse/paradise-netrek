@@ -1,0 +1,56 @@
+# Makefile.in for Paradise server src/common 3.1
+# @configure_input@
+
+@SET_MAKE@
+
+bindir=@bindir@
+datadir=@datadir@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+libexecdir=@libexecdir@
+mandir=@mandir@
+prefix=@prefix@
+srcdir=@srcdir@
+top_srcdir=@top_srcdir@
+
+AR=ar
+ARFLAGS=cruv
+RANLIB=@RANLIB@
+
+CC=@CC@
+CPP=@CPP@
+
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@ -I../include @AUTH_DEFS@ @DEFS@
+LDFLAGS=@LDFLAGS@
+LIBS=@LIBS@ -lm
+
+INSTALL=@INSTALL@
+INSTALL_SCRIPT=@INSTALL_SCRIPT@
+INSTALL_DATA=@INSTALL_DATA@
+
+####
+
+COMMON_OBJS=cutil.o data.o grid.o imath.o parse-ranks.o path.o plutil.o \
+            shmem.o sintab.o smessage.o structdesc.o util.o
+ROBOT_OBJS=detonate.o enter.o getship.o interface.o orbit.o \
+           phaser.o torp.o
+
+all: common.a robot.a
+
+common.a: $(COMMON_OBJS)
+	$(AR) $(ARFLAGS) $@ $(COMMON_OBJS)
+	$(RANLIB) $@
+
+robot.a: $(ROBOT_OBJS)
+	$(AR) $(ARFLAGS) $@ $(ROBOT_OBJS)
+	$(RANLIB) $@
+
+clean:
+	-rm -f $(COMMON_OBJS) $(ROBOT_OBJS) common.a robot.a
+
+# nothing to do for install
+install:
+
+distclean:
+	-rm -f Makefile

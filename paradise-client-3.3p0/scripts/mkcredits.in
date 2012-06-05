@@ -1,0 +1,156 @@
+#! @PERL@
+#
+# Creates credits.c.
+# Use -c to compile in artist credits, otherwise artist credits are read at
+# run time from bitmapDir/credits.
+#
+# Bill Dyess, Fed '95.
+#
+$path = $ARGV[0];
+if ($path eq "-c") {
+  $compile_in = 1;
+  $path = $ARGV[1];
+} else {
+  $compile_in = 0;
+}
+
+die "Usage: $0 [-c] <imagedir>\n  -c    Compile in artist credits.\n" 
+                                                                  unless $path;
+
+open(OUT,">credits.c") || die "can't open credits.c: $!";
+if($compile_in) {
+  open(IN,"$path/credits") || die "can't open $path/credits: $!";
+}
+
+print OUT <<EOF;
+/*
+ * credits.c
+ *
+ * Bill Dyess
+ *
+ */
+
+#include "copyright.h"
+
+#include "config.h"
+#include "Wlib.h"
+#include "defs.h"
+#include "struct.h"
+#include "data.h"
+#include "proto.h"
+
+static char *credits = "\\
+NetrekII (Paradise) is Copyright 1994-1999 by the Paradise Working Group\\n\\
+\\n\\
+NetrekII (Paradise) was created by:\\n\\
+   Larry Denys         (a fungusamoungus)  <sl1yn\@paradise.declab.usu.edu>\\n\\
+   Kurt Olsen          (Bubbles)           <kurto\@cc.usu.edu>\\n\\
+   Brandon Gillespie   (Lynx)              <brandon\@paradise.declab.usu.edu>\\n\\
+\\n\\
+Developers (alphabetical order):\\n\\
+     Dave Ahn                             Larry Denys (a fungusamoungus)\\n\\
+     Eric Dorman                          Bill Dyess (Thought)\\n\\
+     Rob Forsman (Hammor)                 Brandon Gillespie (Lynx)\\n\\
+     Bob Glamm (Brazilian)                Mike McGrath (Kaos)\\n\\
+     Heath Kehoe (Key)                    Kurt Olsen (Bubbles)\\n\\
+     Sujal Patel (LordZeus)               Joe Rumsey (Ogre)\\n\\
+\\n\\
+Contributors (alphabetical order):\\n\\
+     Scott Drellishak                     Mike Lutz\\n\\
+     Ted Hadley                           Heiji Horde\\n\\
+\\n\\
+NetrekII (Paradise) copyright 1993 by:\\n\\
+            Larry Denys, Kurt Olsen, Brandon Gillespie and Rob Forsman\\n\\
+Netrek (XtrekII) copyright 1989 by:\\n\\
+            Scott Silvey and Kevin Smith\\n\\
+Xtrek copyright 1986 by:\\n\\
+            Chris Guthrie and Ed James\\n\\
+Short packets by:                         Heiko Wengler and Ted Hadley\\n\\
+UDP by:                                   Andy Mcfadden\\n\\
+Bronco Release by:                        Terrence Chang\\n\\
+Ted Turner Client by:                     Bill Dyess\\n\\
+EOF
+
+if($compile_in) {
+  while(<IN>) {
+    chop;
+    print OUT "$_\\n\\\n";
+  }
+}
+
+print OUT <<EOF;
+";
+
+void 
+showCredits(win)
+  W_Window win;
+{
+  char *start = credits;
+  char *end = credits;
+  int  y = 30;
+EOF
+
+if(!$compile_in) {
+  print OUT <<EOF;
+  static char *filebuf = NULL;
+  char buf[BUFSIZ];
+  FILE *in;
+EOF
+}
+
+print OUT <<EOF;
+  
+  if(!W_IsMapped(win)) {
+    fprintf(stderr,"Why am I trying to write the credits into a window that doesn't exist?\\n");
+    return;
+  }
+  while(*start) {
+    while(*end != '\\n' && *end) end++;
+    W_WriteText(win, 10, y, textColor, start, end - start, W_BoldFont);
+    start = ++end;
+    y += W_Textheight;
+  }
+EOF
+
+if(!$compile_in) {
+  print OUT <<EOF;
+  if(filebuf == NULL) {
+    sprintf(imagedirend,"/credits");
+    in = fopen(imagedir,"r");
+    if(in == NULL) {
+      sprintf(buf,"Can't open artist credits (%s)",imagedir);
+      perror(buf);
+      filebuf = (char*)malloc(1);
+      *filebuf = 0;
+    } else {
+      struct stat statinfo;
+
+      /* read the credits file into a buffer.  The buffer is kept
+         for faster redraws [BDyess] */
+      fstat(fileno(in),&statinfo);
+      filebuf = (char*)malloc(statinfo.st_size + 1);
+      fread(filebuf,statinfo.st_size,1,in);
+      filebuf[statinfo.st_size] = 0;
+      fclose(in);
+    }
+  }
+  /* write the artist credits [BDyess] */
+  start = filebuf;
+  end = filebuf;
+  while(*start) {
+    while(*end != '\\n' && *end) end++;
+    W_WriteText(win, 10, y, textColor, start, end - start, W_BoldFont);
+    start = ++end;
+    y += W_Textheight;
+  }
+EOF
+}
+
+print OUT <<EOF;
+
+#ifdef BUFFERING
+  /* flush buffer if one exists [BDyess] */
+  if(W_IsBuffered(win)) W_DisplayBuffer(win);	
+#endif /*BUFFERING [BDyess]*/
+}
+EOF

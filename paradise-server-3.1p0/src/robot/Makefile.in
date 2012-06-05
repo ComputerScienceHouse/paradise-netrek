@@ -1,0 +1,56 @@
+# Makefile.in for Paradise server src/common 3.1
+# @configure_input@
+
+@SET_MAKE@
+
+bindir=@bindir@
+datadir=@datadir@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+libexecdir=@libexecdir@
+mandir=@mandir@
+prefix=@prefix@
+srcdir=@srcdir@
+top_srcdir=@top_srcdir@
+
+AR=ar
+ARFLAGS=cruv
+RANLIB=@RANLIB@
+
+CC=@CC@
+CPP=@CPP@
+
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@ -I../include @AUTH_DEFS@ @DEFS@
+LDFLAGS=@LDFLAGS@
+LIBS=@LIBS@ -lm
+
+INSTALL=@INSTALL@
+INSTALL_SCRIPT=@INSTALL_SCRIPT@
+INSTALL_DATA=@INSTALL_DATA@
+
+VPATH=../common:../res-rsa
+
+####
+
+ROBOT_OBJS=robotII.o rmove.o
+
+NEWBIE_OBJS=robot_newbie.o robot_functions.o
+
+all: robotII robot_newbie
+
+robotII: robot.a common.a $(ROBOT_OBJS)
+	$(CC) $(CFLAGS) -o robotII $(ROBOT_OBJS) ../common/robot.a ../common/common.a $(LDFLAGS) $(LIBS)
+
+robot_newbie: robot.a common.a $(NEWBIE_OBJS)
+	$(CC) $(CFLAGS) -o robot_newbie $(NEWBIE_OBJS) ../common/robot.a ../common/common.a $(LDFLAGS) $(LIBS)
+
+clean:
+	-rm -f robotII $(ROBOT_OBJS) $(NEWBIE_OBJS)
+
+install:
+	$(INSTALL) robotII $(prefix)/bin
+	$(INSTALL) robot_newbie $(prefix)/bin
+
+distclean:
+	-rm -f Makefile

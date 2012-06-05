@@ -1,0 +1,22 @@
+#! @PERL@
+# netrektoxbm - convert paradise style Rx.Cx files back to .xbm format
+# 
+# Usage - netrektoxbm inputfile > outputfile.xbm
+#
+# Written by Joe Rumsey (Ogre)
+#
+while(<>) {
+    $bitmap = join($bitmap, $_);
+}
+@bitmap = unpack("C972", $bitmap);
+
+printf("#define width 20\n#define height 320\n");
+printf("static char bits[] = {\n");
+for($i=12; $i < $#bitmap + 1;) {
+    print("  ");
+    for($j=0; $j < 12 ; $j++, $i++) {
+        printf("0x%02x,",$bitmap[$i]);
+    }
+    print("\n");
+}
+print("};");

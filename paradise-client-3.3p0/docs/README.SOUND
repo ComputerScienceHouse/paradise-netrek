@@ -1,0 +1,48 @@
+$Id: README.SOUND,v 1.1 2007/08/27 21:30:19 watts Exp $
+
+Blurb about Paradise Sound Support.
+
+
+GENERAL
+-------
+
+* At this time, only Linux and FreeBSD are supported.
+
+
+COMPILING
+---------
+
+* If you are compiling a client with sound support, define UNIX_SOUND
+  and explictly compile the sound server with "make paradise.sndsrv.linux" or
+  "make paradise.sndsrv.freebsd".  The client defaults to using UNIX_SOUND, for
+  simplicity (overhead is negligable).  You may take your UNIX_SOUND if you
+  architecture does not have a sound server, but it really doesn't matter if
+  you don't.
+
+* For those of you who are brave enough to try to port this to a new arch.
+  Just add your arch.'s define to sound.c and then make a new sound server
+  based on my linux sound server.  Do not modify the linux sound server,
+  please make a new one.  A Sparc Sound Server is in the works.
+
+
+USING (Linux or FreeBSD)
+-------------
+
+* Once a client is compiled with sound support you'll need to uncomment and
+  set the path for the sounds in the .paradiserc (Option soundPath), if you
+  want sounds to play.
+
+* Without the soundPath defined, the client will not even look for an audio
+  device.
+
+* The sound server will check /dev/dsp, /dev/pcdsp, and /dev/pcsp.  The PC
+  speaker driver's device (in linux) is detected and handled properly (the 
+  device's name doesn't matter).  PC Speaker sounds very good, for those of 
+  you without sound cards.
+
+* Some minor Sound skipping may occur under heavy load.  Please report any
+  major problems.  A better scheme is in the works! :)
+
+
+
+Sujal Patel (smpatel@wam.umd.edu)

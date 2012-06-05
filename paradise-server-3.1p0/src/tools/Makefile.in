@@ -1,0 +1,118 @@
+# Makefile.in for Paradise server src/common 3.1
+# @configure_input@
+
+@SET_MAKE@
+
+bindir=@bindir@
+datadir=@datadir@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+libexecdir=@libexecdir@
+mandir=@mandir@
+prefix=@prefix@
+srcdir=@srcdir@
+top_srcdir=@top_srcdir@
+
+AR=ar
+ARFLAGS=cruv
+RANLIB=@RANLIB@
+
+CC=@CC@
+CPP=@CPP@
+
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@ -I../include @AUTH_DEFS@ @DEFS@
+LDFLAGS=@LDFLAGS@
+LIBS=@LIBS@ -lm
+
+INSTALL=@INSTALL@
+INSTALL_SCRIPT=@INSTALL_SCRIPT@
+INSTALL_DATA=@INSTALL_DATA@
+
+VPATH=../common:../res-rsa
+
+AUTH_PROG=@AUTH_PROG@
+AUTH_PROG_OBJS=@AUTH_PROG_OBJS@
+
+####
+
+MES_OBJS=tool-mes.o tool-util.o
+XTK_OBJS=tool-xtk.o tool-util.o
+WM_OBJS=tool-wm.o tool-util.o
+RESET_OBJS=tool-reset.o
+PL_OBJS=tool-pl.o tool-util.o
+PROMO_OBJS=tool-promo.o
+HR_OBJS=tool-hr.o
+HS_OBJS=tool-hs.o
+HERALDRY_OBJS=tool-heraldry.o
+DS_OBJS=tool-ds.o
+TRIM_OBJS=tool-trim.o
+GETSTATS_OBJS=getstats.o
+
+OBJS=$(AUTH_PROG_OBJS) \
+     $(MES_OBJS) \
+     $(XTK_OBJS) \
+     $(WM_OBJS) \
+     $(RESET_OBJS) \
+     $(PL_OBJS) \
+     $(PROMO_OBJS) \
+     $(HR_OBJS) \
+     $(HS_OBJS) \
+     $(HERALDRY_OBJS) \
+     $(DS_OBJS) \
+     $(TRIM_OBJS) \
+     $(GETSTATS_OBJS)
+
+TOOLS=$(AUTH_PROG) mes xtk wm reset pl promo hr hs heraldry ds trim getstats
+
+all: $(TOOLS)
+
+$(AUTH_PROG): $(AUTH_PROG_OBJS)
+	$(CC) $(CFLAGS) -o $(AUTH_PROG) $(AUTH_PROG_OBJS) $(LDFLAGS) $(LIBS)
+
+mes: common.a $(MES_OBJS)
+	$(CC) $(CFLAGS) -o mes $(MES_OBJS) ../common/common.a $(LDFLAGS) $(LIBS)
+
+xtk: common.a robot.a $(XTK_OBJS)
+	$(CC) $(CFLAGS) -o xtk $(XTK_OBJS) ../common/common.a ../common/robot.a $(LDFLAGS) $(LIBS)
+
+wm: common.a $(WM_OBJS)
+	$(CC) $(CFLAGS) -o wm $(WM_OBJS) ../common/common.a $(LDFLAGS) $(LIBS)
+
+reset: common.a $(RESET_OBJS)
+	$(CC) $(CFLAGS) -o reset $(RESET_OBJS) ../common/common.a $(LDFLAGS) $(LIBS)
+
+pl: common.a $(PL_OBJS)
+	$(CC) $(CFLAGS) -o pl $(PL_OBJS) ../common/common.a $(LDFLAGS) $(LIBS)
+
+promo: common.a $(PROMO_OBJS)
+	$(CC) $(CFLAGS) -o promo $(PROMO_OBJS) ../common/common.a $(LDFLAGS) $(LIBS)
+
+hr: common.a $(HR_OBJS)
+	$(CC) $(CFLAGS) -o hr $(HR_OBJS) ../common/common.a $(LDFLAGS) $(LIBS)
+
+hs: common.a $(HS_OBJS)
+	$(CC) $(CFLAGS) -o hs $(HS_OBJS) ../common/common.a $(LDFLAGS) $(LIBS)
+
+heraldry: common.a $(HERALDRY_OBJS)
+	$(CC) $(CFLAGS) -o heraldry $(HERALDRY_OBJS) ../common/common.a $(LDFLAGS) $(LIBS)
+
+ds: common.a $(DS_OBJS)
+	$(CC) $(CFLAGS) -o ds $(DS_OBJS) ../common/common.a $(LDFLAGS) $(LIBS)
+
+trim: common.a $(TRIM_OBJS)
+	$(CC) $(CFLAGS) -o trim $(TRIM_OBJS) ../common/common.a $(LDFLAGS) $(LIBS)
+
+getstats: $(GETSTATS_OBJS)
+	$(CC) $(CFLAGS) -o getstats $(GETSTATS_OBJS) $(LDFLAGS) $(LIBS)
+
+clean:
+	-rm -f $(OBJS) $(TOOLS)
+
+install:
+	@for tool in $(TOOLS); do \
+	  $(INSTALL) $${tool} $(prefix)/bin; \
+	done
+
+distclean:
+	-rm -f Makefile

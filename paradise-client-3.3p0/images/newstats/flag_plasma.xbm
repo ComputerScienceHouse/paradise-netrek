@@ -1,0 +1,4 @@
+#define flag_plasma_width 8
+#define flag_plasma_height 8
+static char flag_plasma_bits[] = {
+   0x08, 0x08, 0x1c, 0x7f, 0x1c, 0x08, 0x08, 0x00};

@@ -1,0 +1,56 @@
+# Makefile.in for Paradise server src/common 3.1
+# @configure_input@
+
+@SET_MAKE@
+
+bindir=@bindir@
+datadir=@datadir@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+libexecdir=@libexecdir@
+mandir=@mandir@
+prefix=@prefix@
+srcdir=@srcdir@
+top_srcdir=@top_srcdir@
+
+AR=ar
+ARFLAGS=cruv
+RANLIB=@RANLIB@
+
+CC=@CC@
+CPP=@CPP@
+
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@ -I../include @AUTH_DEFS@ @DEFS@ @HAVE_UPTIME@ -DUPTIME_PATH=\"@UPTIME_PATH@\"
+LDFLAGS=@LDFLAGS@
+LIBS=@LIBS@ -lm
+
+INSTALL=@INSTALL@
+INSTALL_SCRIPT=@INSTALL_SCRIPT@
+INSTALL_DATA=@INSTALL_DATA@
+
+VPATH=../common:../res-rsa:./galaxygen
+
+####
+
+DAEMON_OBJS=conquer.o daemonII.o dutil.o misc.o planets.o player.o \
+            shipvals.o stats.o sysdefaults.o tourny.o terrain.o weapons.o
+
+all: generators daemonII
+
+generators:
+	@cd galaxygen && $(MAKE)
+
+daemonII: galaxygen.a common.a $(DAEMON_OBJS)
+	$(CC) $(CFLAGS) -o $@ $(DAEMON_OBJS) galaxygen/galaxygen.a ../common/common.a $(LDFLAGS) $(LIBS)
+
+clean:
+	-rm -f daemonII $(DAEMON_OBJS)
+	@cd galaxygen && $(MAKE) clean
+
+install:
+	$(INSTALL) daemonII $(prefix)/bin
+
+distclean:
+	@cd galaxygen && $(MAKE) distclean
+	-rm -f Makefile

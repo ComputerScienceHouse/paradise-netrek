@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# Called when a player is ejected. (If the MAIL_CLUELETTER option is set
+# in config.h)
+#
+
+EJECTLETTER="lib/eject.letter"
+HOST=`hostname`
+echo $1@$2 >> ${NETREKDIR}/logs/eject.log
+mailx -s'You were ejected from Netrek at ${HOST}' $1@$2 < ${NETREKDIR}/${EJECTLETTER}

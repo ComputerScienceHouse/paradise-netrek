@@ -1,0 +1,188 @@
+dnl xxxxxxxxxx
+dnl Predefined variables:
+dnl @CFLAGS@	- compiler flags dnl @CPPFLAGS@	- header search file directory, misc. options for cpp & cc.
+dnl @DEFS@	- -D arguments to CC.
+dnl			if AC_CONFIG_HEADER, then @DEFS@ -> -DHAVE_CONFIG_H
+dnl @LDFLAGS@	- misc options for linker.
+dnl @LIBS@	- -l and -L options to pass to linker.
+dnl xxxxxxxxxx
+
+dnl Process this file with autoconf to produce a configure script
+AC_INIT(Makefile.in)
+
+AC_CONFIG_HEADER($srcdir/include/config.h)
+
+dnl Checks for programs
+AC_PROG_CC
+
+dnl Allows use of $(MAKE)
+AC_PROG_MAKE_SET
+
+dnl Checks for header files.
+AC_PATH_X
+AC_PATH_XTRA
+
+dnl Check for compression lib
+ZLIB=""
+AC_CHECK_LIB(z, uncompress, [ZLIB=-lz],
+[
+  echo
+  echo "*** Could not find compression library (libz)."
+  echo "*** Make sure that it is installed and set"
+  echo "*** the LDFLAGS environment variable to point to it"
+  echo "*** with -L(path) before re-running configure."
+  echo
+  exit 1
+]
+)
+
+dnl Check for XPM lib
+XPMLIB=""
+AC_CHECK_LIB(Xpm, XpmCreatePixmapFromData, [XPMLIB=-lXpm],
+[
+  echo
+  echo "*** Could not find XPM library (libXpm)."
+  echo "*** Make sure that it is installed and set"
+  echo "*** the LDFLAGS environment variable to point to it"
+  echo "*** with -L(path) before re-running configure."
+  echo
+  exit 1
+], ${X_LIBS} ${X_PRE_LIBS} ${X_EXTRA_LIBS} -lX11
+)
+
+dnl some initial definitions
+RSADIR=rsa
+
+dnl NOTE: AC_HEADER_STDC searches for ANSI-compliant header files.
+dnl NOTE: If STDC_HEADERS is defined, this includes these files:
+dnl NOTE: assert.h ctype.h  float.h  limits.h math.h
+dnl NOTE: setjmp.h signal.h stdarg.h stdio.h  stdlib.h
+dnl NOTE: string.h time.h   errno.h  stddef.h
+dnl NOTE: (*) locale.h wchar.h  iso646.h wctype.h
+dnl NOTE:
+dnl NOTE: this is essentially a useless check, as I'm going to assume
+dnl NOTE: an ANSI-standard environment on whatever this builds on.
+dnl NOTE: If you don't have an ANSI-standard environment, you need to
+dnl NOTE: upgrade ;)
+
+dnl NOTE: in theory, we could define _POSIX_SOURCE and get these
+dnl NOTE: headers automatically as well, however I'm not convinced
+dnl NOTE: yet that all platforms conform to this.. doh
+dnl NOTE: termios.h dirent.h fcntl.h unistd.h grp.h pwd.h 
+dnl NOTE: sys/stat.h sys/wait.h sys/time.h sys/types.h sys/utsname.h
+
+AC_HEADER_STDC
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS(fcntl.h sys/time.h unistd.h memory.h sys/utsname.h)
+AC_CHECK_HEADERS(pwd.h strings.h bstring.h)
+AC_CHECK_HEADERS(netinet/in.h netinet/tcp.h netdb.h sys/select.h sys/socket.h)
+AC_CHECK_HEADERS(sys/param.h sys/stat.h sys/types.h)
+AC_CHECK_HEADERS(arpa/inet.h assert.h)
+AC_CHECK_HEADERS(zlib.h,,
+[
+  echo
+  echo "*** Could not find compression library header (zlib.h)."
+  echo "*** Make sure that it is installed and set"
+  echo "*** the CPPFLAGS environment variable to point to it"
+  echo "*** with -I(path) before re-running configure."
+  echo
+  exit 1
+]
+)
+
+HAVE_XPM_H=no
+HAVE_X11_XPM_H=no
+
+AC_CHECK_HEADERS(xpm.h, [HAVE_XPM_H=yes],
+  AC_CHECK_HEADERS(X11/xpm.h, [HAVE_X11_XPM_H=yes]))
+
+if test "x$HAVE_XPM_H" = xno -a "x$HAVE_X11_XPM_H" = xno; then
+  echo
+  echo "*** Could not find XPM library header (xpm.h)."
+  echo "*** Make sure that it is installed and set"
+  echo "*** the CPPFLAGS environment variable to point to it"
+  echo "*** with -I(path) before re-running configure."
+  echo
+  exit 1
+fi
+
+dnl Check for typedefs, structs, and compiler characteristics
+AC_C_CONST
+AC_C_CHAR_UNSIGNED
+AC_HEADER_TIME
+AC_STRUCT_TM
+AC_STRUCT_TIMEZONE
+
+dnl Checks for lib. functions
+AC_PROG_GCC_TRADITIONAL
+AC_TYPE_SIGNAL
+AC_FUNC_WAIT3
+AC_CHECK_FUNCS(gettimeofday strdup strstr uname)
+
+dnl Check for install program.  Sets INSTALL, INSTALL_PROGRAM(755),
+dnl   and INSTALL_DATA(644).  We MUST have install-sh in our distribution if
+dnl   this is used.
+AC_PROG_INSTALL
+
+AUTH_OBJS=""
+AUTH_DEFS=""
+SCRAMBLER="echo"
+
+AC_CHECK_PROG(PERL, perl, perl, echo)
+
+ac_have_rsa="yes"
+if test "x$PERL" = xecho; then
+  ac_have_rsa="no"
+fi
+
+AC_ARG_ENABLE(rsa,
+[  --enable-rsa[=EXPIRE]   Enable RSA authentication in client
+                             [EXPIRE=today+2 yrs or MM-DD-YYYY or MM/DD/YYYY]],
+  [ if test "x$ac_have_rsa" = xyes; then ]
+    AC_CHECK_HEADERS(gmp.h,,
+                     [ echo "  *** Cannot find gmp.h"
+		       ac_have_rsa="no" ])
+    AC_CHECK_LIB(gmp, mpz_init,,
+                 [ echo "  *** Cannot find GNU MP library (libgmp)"
+	           ac_have_rsa="no" ])
+    AC_CHECK_FILE($srcdir/src/rsa/rsa_box.c,,
+		  [ echo "  *** Cannot find rsa_box*.c in $srcdir/src/rsa"
+		    ac_have_rsa="no" ])
+  [ else
+      echo "  *** Cannot find perl (needed to scramble object link order)"
+    fi
+
+    if test "x$ac_have_rsa" = xno; then
+      echo "  *** Building without RSA authentication"
+    else
+      if test "x$enable_rsa" = xyes; then
+        EXPIRE_DATE=`${PERL} $srcdir/src/rsa/expire.perl`
+      else
+        EXPIRE_DATE=`${PERL} $srcdir/src/rsa/expire.perl $enable_rsa`
+      fi
+      AUTH_LIBS="-lgmp"
+      AUTH_SRCS="expire.c `(cd src && echo rsa/rsa_box*.c)`"
+      AUTH_OBJS=`echo $AUTH_SRCS | sed -e 's,\.c,\.o,g'`
+      AUTH_DEFS="-DAUTHORIZE"
+      SCRAMBLER='$(PERL) rsa/scrambleargs.perl'
+    fi ]
+)
+
+SHIP_BITMAP_PATH=~/.paradise/images:${datadir}/paradise/images
+
+AC_SUBST(RSADIR)
+AC_SUBST(ZLIB)
+AC_SUBST(XPMLIB)
+AC_SUBST(AUTH_LIBS)
+AC_SUBST(AUTH_SRCS)
+AC_SUBST(AUTH_OBJS)
+AC_SUBST(AUTH_DEFS)
+AC_SUBST(SCRAMBLER)
+AC_SUBST(EXPIRE_DATE)
+AC_SUBST(SHIP_BITMAP_PATH)
+
+AC_OUTPUT(Makefile src/Makefile src/expire.c)
+
+dnl AC_OUTPUT(src/rsa/Makefile scripts/make_shippicfile.perl scripts/mkcredits scripts/mkimgsrc scripts/netrektoxbm scripts/numtoship scripts/scrambleargs scripts/unused_images)
+
+dnl chmod +x scripts/*

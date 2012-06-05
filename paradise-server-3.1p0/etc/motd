@@ -1,0 +1,94 @@
+
+
+
+
+
+
+
+
+
+
+
+
+  System: <insert info here>
+  Memory: <insert info here>
+  OS:     <insert info here>
+
+
+
+
+
+
+
+
+  Maintained by System Administrator
+    (insert email address here)
+
+
+
+
+
+
+
+
+  ******* Hit 'f' or 'b' in this window to page forwards or backwards *******
+
+
+	@@b
+
+ ----- GAME NOTES -----
+
+The current default configuration of this game does not bear much
+resemblance to the older Paradise defaults.  The major features of
+this configuration are:
+
+  o  Top warp speed has been significantly decreased.  Fuel consumption
+     has been increased.  There is no repairing during warp.
+     As a result, it is no longer possible for a ship to simply
+     zip around the galactic continuously evading attackers, and FUEL
+     facilities have increased greatly in importance (see below as well).
+
+  o  Planets no longer revolt if they have developed facilities.
+
+  o  A new ship, the Transport, has been added.  This is a fuel tanker
+     that can resupply fuel to two ships at once and is capable of
+     holding 100,000 fuel on its own.
+
+  o  It is no longer necessary to take over all the enemy's planets.
+     In the current configuration reducing the number of enemy planets
+     down to two will result in a victory.
+
+  o  No kills are required to carry armies.  However, only an assault ship
+     and starbases can carry armies.  The assault ship's torp and phaser
+     ranges and damages have been drastically reduced, and its shields
+     are practically non-existent (i.e., a TEAM effort is now required
+     to take planets).
+
+  o  To add to the fun, it is possible to lose armies into space if your
+     shields are down and you are taking beyond 50% damage.
+
+ ----- continued on next page (hit 'f') -----
+
+	@@b
+
+  o  Only certain ships can bomb certain things; the rest cannot bomb
+     anything:
+       - SC: can only bomb armies
+       - BB: can bomb armies or facilities
+       - AS: can bomb armies or facilities
+       - WB: can bomb armies or facilities (gets double credit for bombing)
+
+	@@b
+
+Paradise III is now a SourceForge project.  Go to
+
+   http://sourceforge.net/project/?group_id=1104
+
+for the latest information on client and server development and to
+provide feedback (especially bug reports - see the Bug Tracking section
+on that page) to the developers.
+
+This code is the result of a massive cleanup of the last released
+version of the server (which was 3.0).  The source code is approaching
+readability.
+

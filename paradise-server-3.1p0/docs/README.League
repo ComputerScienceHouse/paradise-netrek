@@ -1,0 +1,95 @@
+(9/19/94)
+     
+          					Robert Forsman sez
+     
+HOW TO SET UP A PARADISE LEAGUE SERVER:
+     
+     Compile the server.  If you have a working server already, you're
+     good to go.  There are no special options to turn on to configure a
+     league tournament server.
+     
+     Instead of invoking listen with "listen -p 2592" start two of them:
+     
+          % listen -H -p 3333
+          % listen -A -p 4444
+     
+     These processes automatically invoke ntserv with the proper
+     arguments and ntserv then invokes the daemon with the correct
+     arguments.  A daemon running in league mode does NOT use the .sysdef
+     file.  Any necessary adjustments will be made by the League Council
+     (you can modify sysdefaults.c or shipvals.c if you REALLY want to
+     change something, but we discourage it).
+     
+     People can connect to the port of their choice and they will be
+     forced onto the home or the away team.
+     
+     Once in the game players have a number of commands available to
+     them.  To access these commands send yourself a message starting with
+     the word "league" (or any abbreviation down to "le").
+     
+     One player will be captain and declare himself so by issuing the
+     command "league captain".  The captain's next duty is to name his team
+     with "league teamname *string*".
+     
+     The away team has first choice of empires.  To choose an empire the
+     captain issues the command "league *shortname*".  The available
+     empires are FED, ROM, KLI, and ORI.  The home team then chooses an
+     empire.
+     
+     Once empires are chosen both captains issue the command "league
+     start", everyone explodes, and the game enters the warmup.  After 1
+     minute of warmup everyone explodes again and the game begins
+     ("commence scumming, you twinks!").
+     
+     Other commands are available under the league prefix.  Some of them
+     are restricted to captains.  Here is a section I put in my MOTD once.
+     I've got my roommate working on flashy graphics.
+     
+HOW TO USE THE CONTROLS FOR LEAGUE PLAY.
+     
+     You can use a league control by sending a message to yourself
+     beginning with "league" (or any abbreviation down to "le").  The
+     following commands are usable by any peasant:
+     
+     "league help"     gives you a short refresher on available league
+                       commands.
+     
+     "league captain"  makes you the captain of your team.  "league
+                       captain 0" will unmake you captain.
+     
+     "league info"     tells you about each team.
+     
+     "league time"     tells you how much time the game is configured for.
+                       Overtime is not yet implemented.
+     
+     "league home" and "league away" can be used to defect to another
+                       team.
+     
+THE FOLLOWING COMMANDS ARE RESERVED FOR TEAM CAPTAINS:
+     
+     "league pass"     can be used to pass the first choice of empire to 
+                       the other team.  Away has the first choice of
+                       empire when the server starts.
+     
+     "league start"    signifies your team is ready to start.  If you
+                       decide you are NOT ready to start, use "league
+                       start 0".  You need a team name, a team captain
+                       and an empire to start.
+     
+     "league teamname whatever" names your team `whatever'.
+     
+     "league empire"   (where empire is "ind", "fed", "rom", "kli", or
+                       "ori") sets your team's empire to that empire.
+                       Ind actually stands for no choice of empire and
+                       allows your opponents to choose that empire.
+     
+     "league time regulation overtime" (where regulation and overtime are
+                       integers) sets the time in minutes of each period
+                       of the tournament.  Overtime is not yet implemented.
+     
+     "league home pnum" and "league away pnum" allow the captain of a team
+                       to throw a player off his own team.
+     
+     "league galaxy"   resets the galaxy with a new planetary
+                       configuration.
+     

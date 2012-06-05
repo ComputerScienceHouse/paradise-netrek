@@ -1,0 +1,266 @@
+########################################################################
+        ------ Netrek II: Paradise - Client ChangeLog ------
+
+
+2007-08-27	Jeffrey Watts <watts@jayhawks.net>
+
+	* Paradise client 3.3p0 release.
+	* Moved doc/ to docs/ to be similar to the server source.
+	* Moved ChangeLog to docs/CHANGELOG.
+	* Moved TODO to docs/TODO.
+	* Moved README to docs/README.
+	* Added README that directs folks to docs/
+
+2000-04-17	Jeffrey Watts <watts@jayhawks.net>
+
+	* Added images/planets/F/m*.xpm files.  These are full-color
+	galactic planet images.  Should be much nicer looking that the
+	XBMs they replace.
+	* Added images/planets/mwormhole.xpm.  Nice, full-color galactic
+	wormhole image.
+	* Added images/planets/mplan_noinfo.xpm.  Also a nice, full-color
+	galactic planet image for unexplored planets.
+
+2000-04-12	Bob Glamm <glamm@users.sourceforge.net>
+
+	* Fixed configure.in; misquoted SCRAMBLEARGS replacement.
+
+2000-04-06	Jeffrey Watts <watts@jayhawks.net>
+
+	* Added some colors other than the primary colors to the 
+	*.colored pixmaps.  This makes the colored pixmaps look a lot 
+	nicer.
+
+2000-04-05	Bob Glamm <glamm@users.sourceforge.net>
+	
+	* Fixed configure, configure.in to properly recognize libXpm.*
+	when it was stuck in the X11 lib directory.
+
+2000-04-03	Bob Glamm <glamm@users.sourceforge.net>
+
+	* Added two new boolean options, colorFriends (off by default)
+	and colorEnemies (on by default).  Controls whether to use the
+	.colored or the normal XPMs.
+
+	* Fixed up most paths so that they refer to ~/.paradise/ instead
+	of having multiple . files in the home directory.
+
+2000-04-01	Bob Glamm <glamm@users.sourceforge.net>
+
+	* Eliminated torp color bug.  Torp colors are always correct
+	now.
+
+	* Fixed bug in client socket code state machine that would cause
+	it to hang periodically.
+
+ 	* Eliminated lag by setting QoS field of all packets to
+	"This packet is on fire we need it delivered IMMEDIATELY"
+
+	* Happy April Fool's ;)
+
+2000-03-24	Bob Glamm <glamm@users.sourceforge.net>
+
+	* Tons of bugfixes.  Eliminated SEGVs on Bronco when OBserving
+	a player that just died and exiting the game.
+
+	* Planet display list fixed up to not display planetXX entries.
+
+2000-03-23	Dave Ahn <ahn@users.sourceforge.net>
+	
+	* Added UDP_PORTSWAP code back in, enabled by default.
+	
+	* Added SP2 support.  Needs testing.
+
+2000-03-22	Bob Glamm <glamm@users.sourceforge.net>
+
+	* Changed all instances of ted, tedturner, Ted, and Ted Turner,
+	to something involving Paradise.
+
+	* Made all XBM images compiled in by default as something for
+	the client to fall back on.  Also made rainbow dashboard XPM and
+	MOTD header XPM compiled in by default (it was easier than
+	modifying the code to handle those two cases).
+
+	* Made useExternalImages on by default.  This way an external
+	image always overrides an internal image (either XBM or XPM).
+
+	* Fixed up handling for external images if they did not exist.
+
+	* Added context-sensitive ship images.  If the complete set
+	of images exists:
+
+	  1) on a P-server, the <team> and <team>.colored pixmaps are used;
+	     on a B-server, the <team>.bronco & <team>.bronco.colored pixmaps
+	     are used.
+	  2) Friendly players use the normal (grey) pixmaps; non-friendly
+	     players use the colored pixmaps.
+
+	This way we get easy distinction between server types, AND we
+	get easy distinction between who's friendly and who's not.
+
+2000-03-20	Bob Glamm <glamm@users.sourceforge.net>
+
+	* Added multipath support to shipBitmapPath, changed default
+	path.  shipBitmapPath is now a colon-separated list of paths
+	that specifies where to find the XBM or XPM images.  By default
+	it is "~/.tedturner/images:${datadir}/paradise/images".  The image
+	that is loaded is the first one found, so this default image path
+	also allows a user to override system-installed images by plopping
+	them down in their home directories.
+
+	* Fixed up ship XPMs.  Consistent colors and single-
+	view SBs are now present for all races.
+
+2000-03-17	Bob Glamm <glamm@users.sourceforge.net>
+
+	* Fixed problem with locking on cloaked players from Bronco
+	observer mode.
+
+	* Fixed up some Ind and weapon XBMs.
+
+2000-03-15	Bob Glamm <glamm@users.sourceforge.net>
+
+	* Added 'make install' target and addition of default images path
+	in client.
+
+	* dynamic_images is now the only supported build method.
+
+	* General preparation for first client release.
+	
+2000-03-03	Dave Ahn <ahn@users.sourceforge.net>
+	
+	* BUGFIX: 36 player support for the Netrek Vanilla Server.
+	
+2000-01-13	Dave Ahn <ahn@users.sourceforge.net>
+	
+	* BUGFIX (x11window.c): Jeffrey Watts <watts@jayhawks.net>
+ 	submitted a patch to get TT to work under Window Make in Linux.
+	
+  	"I've noticed that TedTurner has certain problems when used with
+ 	Window Maker.  Specifically, the metaserver window fails to appear
+ 	when "-m" is passed to 'TedTurner'.  I tracked the problem down to
+ 	the way in which Window Maker handles the "WithdrawnState" hint
+ 	that TedTurner passes to WindowMaker."
+	
+	"I'm a complete novice when it comes to X, but as far as I can
+ 	gather, our windows shouldn't be passing "WithdrawnState".
+  	Instead, they probably should be passing "NormalState".  This
+ 	problem manifests itself with Window Maker since WM uses
+ 	"WithdrawnState" to mean an application that runs in its icon
+ 	(dock application)."
+	
+	"I've made a patch against "x11window.c" that corrects this
+ 	problem.  This patch also comments out "char *strdup();", which
+ 	was causing compilation to fail on my Linux system (Red Hat
+ 	6.1/x86 - all errata applied)."
+	
+2000-01-06	Dave Ahn <ahn@users.sourceforge.net>
+	
+	* VERSION: 1.3.1.1-export
+	
+	* RELEASE: 1.3.1.1-export is an interim CVS tag to facilitate
+ 	migration to sourceforge.net.  If you are interested in
+ 	contributing to Paradise client and/or server development, please
+ 	visit http://www.sourceforge.net and create an account there.  You
+ 	can then email me with your Source Forge account name or UID, and
+ 	I can add you to the project.
+
+1999-01-28	Dave Ahn <ahn@vec.wfubmc.edu>
+
+	* BUGFIX (configure.in): Changed XPMDIR from xpm to xpm/lib.
+
+	* BUGFIX (configure.in): From Mike Roda <mroda@ipass.net>, I
+ 	scavenged some code for the configure.in script so that it will
+ 	correctly find the X libraries and X includes on linux [this will
+ 	probably work on other OSes as well].  I also found the reason I
+ 	was getting errors when running the configure script: configure.in
+ 	was using parentheses in a few places where it should have been
+ 	using curly braces.  Lastly, I changed configure.in to force the
+ 	makefile to use the libz.a in the zlib subdirectory, otherwise the
+ 	compiler kept trying to use the libz.a I had in /usr/lib which
+ 	wasn't compatible.  So anyway, I fixed up configure.in, ran
+ 	autoconf, and now the whole thing builds "out-of-the-box" on my
+ 	system.
+
+1999-01-22	Dave Ahn <ahn@vec.wfubmc.edu>
+
+	* RELEASE: Source exported to FTP site.
+
+	* VERSION: 1.3.1
+
+	* BUGFIX (shortcomm.c): thetorp->t_fuse was being set to INTMAX,
+ 	which is -1, changed to 10000, a big number.  This was causing a
+ 	serious bug where torp explosions were not animated.
+
+1999-01-22	Dave Ahn <ahn@vec.wfubmc.edu>
+
+	* RELEASE: Source exported to FTP site.
+
+	* VERSION: 1.3
+
+	* UPDATE: Export out of private CVS tree, import into public CVS
+	repository at ftp.netrek.org.
+
+	* PORT: FreeBSD 3.0-STABLE
+
+1999-01-21	Dave Ahn <ahn@vec.wfubmc.edu>
+
+	* UPDATE: Removed #ifdef ATM.
+
+	* UPDATE (credits.c): Added Dave Ahn, Eric Dorman.
+
+	* UPDATE (socket.c): Changed .pnetrek.org to netrek.org.
+
+	* UPDATE (main.c): Changed instructions to get client.
+
+1999-01-20	Dave Ahn <ahn@vec.wfubmc.edu>
+
+	* VERSION: 1.3 beta
+
+	* FEATURE: Added autoSetWar functionality from 2.4p1a.
+
+	* UPDATE: Default server changed to tanya.ucsd.edu.
+
+	* BUGFIX: Numerous fixes to remove compiler warnings.
+
+	* BUGFIX (getship.c): do not destroy downloaded images.
+
+	* FEATURE (paradise.sndsrv.freebsd.2.c): USS-Lite compatible sound
+ 	for FreeBSD from 2.4p1a, UNTESTED.
+
+	* FEATURE (paradise.sndsrv.hp.c): USS-Lite compatible sound for
+ 	HP/UX from 2.4p1a, UNTESTED.
+
+	* FEATURE (paradise.sndsrv.linux.2.c): USS-Lite compatible sound
+ 	for Linux from 2.4p1a, UNTESTED.
+
+	* FEATURE (paradise.sndsrv.sun.c): VoxWare compatible sound for
+ 	SunOS from 2.4p1a, UNTESTED.
+
+	* FEATURE (sound2.c): Platform independent sound support from
+ 	2.4p1a, UNTESTED.
+
+	* BUGFIX (macro.c): Escape control character fix from 2.4p1a.
+
+	* UPDATE: default metaserver changed to metaserver.netrek.org.
+
+	* BUGFIX (playerlist.c): NULL terminate desig.
+
+	* BUGFIX (senddist.c): mbuf removed, multiply defined.
+
+	* UPDATE (version.c): Client version updated.
+
+	* BUGFIX (x11window.c): w_MakeWindow() for scrollbar had invalid
+ 	arg that causes core dump or floating review_team window.
+
+	* UPDATE: Use zlib 1.1.3.
+
+	* UPDATE: Use xpm 3.4k.
+
+	* UPDATE (configure): Use autoconf 2.13.
+
+	* BUGFIX: Flickering problem during window clear fixed.
+
+
+########################################################################
+	$Id: CHANGELOG,v 1.1 2007/08/27 21:30:19 watts Exp $

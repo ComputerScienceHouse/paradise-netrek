@@ -1,0 +1,440 @@
+Robert Forsman 3-3-93
+
+  If there is a file in the netrek directory called conf.sysdef, the
+daemon will look in it for various configuration options.  If the file
+is changed in the middle of the game, the daemon will eventually
+notice and reread the values from the file into the shared memory
+segment.  Note that some of the options will not affect players
+immediately (PLKILLS=, SHIP=)
+
+  The following options are of the form
+
+OPT=val
+
+
+SHIPS=%s
+
+  Sets which ships are available for flying.  The string after the =
+is a comma separated list of values from the list:
+  "SC", "DD", "CA", "BB", "AS", "SB", "AT", "FL", "JS", "WB", "CL",
+  "CV", "UT", "PT"
+
+WEAPONS=%s
+
+  Sets which special "weapons" are allowed on the server.  The string
+after the = is a comma separated list of values from the list:
+   "PLASMA", "TRACTOR", "MISSILE", "FIGHTER"
+
+SUN_EFFECT=%s
+
+  Sets which systems are affected by stars.  The string after the = is
+a comma separated list of values from the list:
+  "PLASMA", "MISSILE", "FIGHTER", "PHOTON"
+
+NEB_EFFECT=%s
+
+  Sets systems affected by nebulous terrain. The string after the = is
+a comma separated list of values from the list:
+  "PLASMA", "PHASER", "SHIELD", "SENSOR", "WARP", "CLOAK" 
+
+ASTEROID_EFFECT=%s
+
+  Sets systems afected by asteroids.  The string after the = is
+a comma separated list of values from the list:
+  "PLASMA", "MISSILE", "FIGHTER", "PHOTON", "IMPULSE", "TRACTOR"
+
+SHIP=%d
+
+  The text following this has configuration values for ship class %d.
+The ship configuration ends with the word "end" on a line by itself.
+The format of each configuration line is
+
+%s %s %?
+
+  The first string is currently ignored, but should be the 2-character
+abbreviation for the ship.  The second string is the value name.  The
+third string is the new value.  Each value name can expect a different
+type of value.  The current value encodings are:
+
+  CHAR	%c
+  SHORT	%hi
+  INT	%i
+  LONG	%li
+  FLOAT	%f
+  STRING %s
+  LONGFLAGS %s  (a comma separated list of values from a special list)
+
+  The list of value names can be found in the file structdesc.c.
+Their meanings are not yet documented.  Take a guess :)
+
+RELOAD_SHIPDEFAULTS=
+
+  Causes the initial ship defaults to be reread.  Clears any changes
+that may have been made by previous SHIP= directives.
+
+TOURN=%d
+
+  Sets the number of players/team required for tournament mode.
+
+TESTERS=%d
+
+  Sets how many slots are reserved for robots/testers.
+
+CONFIRM=%hhd
+
+  A non-zero value means that binaries that do not authenticate
+properly will be refused access to the game.
+
+MAXLOAD=%f
+
+  Sets the maximum server machine load before the server refuses
+access.  This option might not be fully functional.
+
+UDP=%hhd
+
+  Enables UDP protocol.  This is customarily on.
+
+MINUPDDELAY=%d
+
+MINOBSUPDDELAY=%d
+
+PLKILLS=%f
+
+  Sets the number of kills required for plasmas.  The player must
+refit to a ship that mounts plasmas before they are available.
+
+MSKILLS=%f
+
+  Sets the number of kills required for missiles.  The player must refit
+to a ship that mounts missiles before they are available.
+
+EROSION=%f
+
+  Sets the chance (<1) that a point of damage will cause irreparable
+damage to your ship.
+
+PENETRATION=%f
+
+  Sets the amount of damage (<1) that leaks through weakened shields.
+
+NEWTURN=%d
+
+  A non-zero value enables new turn code.  This is rarely enabled.
+With newturn on, turning radii are linearly dependent upon speed.
+With newturn disabled, turning radii are somewhat exponential with
+speed.  Current turning numbers on ships are tuned for NEWTURN=0
+
+HIDDEN=%d
+
+  A non-zero value means that enemy ships that are far away from all
+teammates will not appear on the galactic scans during T-mode.
+
+PLANUPDSPD=%f
+
+  Sets the planet update speed.  This only affects how fast planets
+orbit stars.  Reasonable values range from 1 to 3.  Anything above 10
+is probably too fast.  Anything below 0.1 might as well be 0.
+
+GALAXYGENERATOR=%d
+
+  Sets which method to generate the galaxy with.  1 is the original
+Paradise 2.01 galaxy generator.  2 is Bob Forsman's compact galaxy
+generator.  3 is Heath Kehoe's diamond galaxy generator.  4 is Mike
+McGrath's Bronco emulator.  5 is Mike McGrath's small galaxy
+generator.  6 is a hack on generator 3 to give 2 systems to each race.
+Anything else is interpreted as 1.
+
+NUMNEBULA=%d
+
+  Sets the number of nebulous cloud "seeds" to be placed in the galaxy.
+Nebulae grow from these "seeds" when the galaxy is created.  Higher
+numbers mean more nebulous terrain.
+
+NEBULASIZE=%d
+
+  Sets the amount of nebulous terrain each "seed" represents.  See NUMNEBULA.
+Higher is more.
+
+NUMASTEROID=%d
+
+  Sets the number of asteroid belts -- maximum of one per star.
+
+ASTEROIDTHICKNESS=%f
+  
+  Sets the width of asteroid belts.  0.5 is skinny, 3.0 would be pretty fat.
+
+ASTEROIDDENSITY=%d
+
+  Value from 0 - 100.  100 would be a solid belt of asteroids.  0 would be no
+asteroids in the belt at all.
+
+ASTEROIDRADIUS=%d
+
+  Distance at which an asteroid belt orbits it's parent star.
+
+ASTEROIDTHICKVAR=%f
+
+  Maximum variance from the ASTEROIDTHICKNESS variable.
+
+ASTEROIDDENSVAR=%d
+
+  Maximum variance from the ASTEROIDDENSITY variable.
+
+ASTEROIDRADVAR=%d
+
+  Maximum variance from the ASTEROIDRADIUS variable.
+
+POPSCHEME=%hhd
+
+  A value of 0 is the Paradise II exponential army growth algorithm.
+A value of 1 is Bob Forsman's surface-based demi-uniform pop scheme.
+
+POPCHOICE=%hhd
+
+  A value of 0 is the Paradise II 1/15 Hz planet sweep pop choice
+algorithm.  A value of 0 is Bob Forsman's 10Hz progressive empire scan
+algorithm.
+
+POPSPEED%=%d
+
+  Controls the speed of the planet popping.  100 is base speed, higher
+numbers mean faster popping.
+
+RESOURCEBOMBING=%hhd
+
+  If non-zero then allow facilities to be bombed.  If zero then
+facilities can not be bombed (like Bronco).
+
+REVOLTS=%hhd
+
+  If non-zero then planetary revolts can happen.
+
+BRONCOSHIPVALS=%hhd
+
+  If non-zero then the next time the daemon initializes the ship
+values, they will get bronco values.  You must follow this directive
+with a line that says "RELOAD_SHIPDEFAULTS=".
+
+EVACUATION=%hhd
+
+  If non-zero then you are allowed to beam the last armies off a
+planet.
+
+AFTERBURNERS=%hhd
+
+  If non-zero then you are allowed to use afterburners.
+
+WARPDRIVE=%hhd
+
+  If non-zero then you are allowed to use warp engines.
+
+FUELEXPLOSIONS=%hhd
+
+  If non-zero then the damage from a ship's explosion is fuel-based.
+A zero value emulates Bronco's flat damage.
+
+NEWCLOAK=%hhd
+
+BRONCORANKS=%hhd
+
+NEWARMYGROWTH=%hhd
+
+  If NEWARMYGROWTH=0 and POPCHOICE=0 then Bronco-like army growth is
+enabled.
+
+WARPDECEL=%hhd
+
+  A zero value means that ships instantly decelerate from maxwarp to
+maximpulse when the user chooses an impulse speed.  Otherwise, a
+deceleration is required, during which weapons are still inoperative.
+Afterburners can be used to decelerate more quickly, but watch your
+etem.
+
+AFFECTSHIPTIMERSOUTSIDET=%hhd
+
+  If this setting is non-zero then ship timers will be affected by the
+destruction of a ship even outside of tournament mode.  The default
+value is 0 for league play.
+
+DURABLESCOUTING=%hhd
+
+  If this setting is non-zero then a scouted planet is up-to-date
+until taken from you by the enemy (bronco emulation).  Zero is
+paradise style.
+
+FACILITYGROWTH=%hhd
+
+  If non-zero then facilities grow from surface properties.
+
+RPRDURINGWARPPREP=%hhd
+
+  If non-zero then you are allowed to repair during the warp prep period.
+
+RPRDURINGWARP=%hhd
+
+  If non-zero then you are allowed to repair while warp drive is engaged.
+
+FIREDURINGWARPPREP=%hhd
+
+  If non-zero then you are allowed to fire during the warp preparation
+period.
+
+FIREDURINGWARP=%hhd
+
+  If non-zero then you are allowed to fire while warp drive is engaged.
+
+FIREWHILEDOCKED=%hhd
+
+  If non-zero then you can fire while docked to a base.
+
+WARPPREPSTYLE=%hhd
+
+  If 0 then tractors (and pressors) do not affect warp preparation.
+If 1 then they will cause an abort if the ship is being tractored at
+the end of warp prep.  If 2 then the ship will be unable to enter warp
+until the tractors are disengaged.  If 3 then a tractor will abort
+warp prep at ANY time.  If 4 then a tractor beam suspends the
+preparation countdown.
+
+CLOAKDURINGWARPPREP=%hhd
+
+  If non-zero then you are allowed to cloak during warp preparation.
+
+CLOAKWHILEWARPING=%hhd
+
+  If non-zero then you are allowed to cloak while warp drive is engaged.
+
+ORBITDIRPROB=%f
+
+  Probability that you will orbit the planet clockwise.
+
+PLANETSINPLAY=%d
+
+  The maximum number of planets that can belong to teams in play.
+3rd-race and independent planets don't count.
+
+BEAMLASTARMIES=%d
+
+  If non-zero then you can beam up the last armies from the last
+planet (surrender).
+
+TIMEOUTS=%d
+
+  Number of timeouts allowed in a league game (NYI).
+
+REGULATIONMINUTES=%d
+
+  Number of minutes in regulation league play.
+
+OVERTIMEMINUTES=%d
+
+  Number of minutes in overtime league play (NYI).
+
+PING_PERIOD=%d
+PING_ILOSS_INTERVAL=%d
+PING_GHOSTBUST=%d
+PING_GHOSTBUST_INTERVAL=%d
+
+  Some goop about ping packets.
+
+VARIABLE_WARP=%d
+
+  If non-zero then players can alter their warp speed.
+
+WARPPREP_SUSPENDABLE=%d
+
+  If non-zero then warp preparation can be suspended and resumed.
+
+HELPFULPLANETS=%d
+
+  If nonzero then planets help you refuel and regain etemp capacity.
+
+NUMWORMPAIRS=%d
+
+  Number of wormhole pairs placed in the galaxy
+
+WBBOMBINGCREDIT=%hhd
+
+  If non-zero then warbases get bonus credit for bombing enemy planets added
+to their statistics.
+
+JSPLANETCREDIT=%hhd
+
+  If non-zero then jumpships get credit for assisting planet takers.
+
+BUTTTORP_PENALTY=%hhd
+
+  If non-zero then butt torpers get massive increases in their weapon temps.
+
+SLOWBOMB=%hhd
+
+  If non-zero then the slow resource bombing code is in effect.
+
+ROBOTSTATS=%hhd
+
+  If non-zero then robots accumulate statistics.
+
+LOSING_ADVANTAGE=%f
+
+  If this is >= 1.0 then the losing team gets an army pop advantage.  Makes
+for long games.  If enabled, a good value is around 2.0.
+
+VICTORY_PLANETS=%d
+  
+  If this is more than 0, taking all of the enemy planets is not required
+for victory; this number then indicates how many enemy planets can remain
+for victory.  Default is 0 (normal Paradise style).
+
+REVOLT_WITH_FACILITIES=%hhd
+
+  If this is zero then planets with built facilities (whether AGRI,
+FUEL, REPAIR, or SHIPYARD) will not revolt.  Default is non-zero
+(planets may revolt if they have less than 4 armies).
+
+KILL_CARRIED_ARMIES=%f
+  If this is > 0.0 then there is this chance that if a ship's hull is damaged
+past 50% then a certain number of any carried armies will be killed.  The
+number of armies killed is proportional to the damage over 50% and the
+number of armies carried.  A good number is probably 0.30 (30% chance).
+
+  Example: I shoot at an AS that is carrying 6 armies.  I cause the
+           hull damage to go up to 75% by a torp.  (75 - 50) / 50 = 0.5,
+	   so I have a 30% chance of killing between 0 and 
+	   (0.5 * 6) = 3 armies with that torp.
+
+SHIPYARD_BUILT_BY_SB_ONLY=%hhd
+  If this is non-zero, then only the starbase can build a shipyard on a metal
+planet (i.e., random metal planets won't grow their own shipyards, the
+SB must be orbiting them).  Default is 0 (normal Paradise style).
+
+CAN_BOMB_OWN_SHIPYARD=%hhd
+  If this is non-zero, this will allow a friendly ship to remove a team's
+own shipyard if that team had more than one to begin with (this eliminates
+the wierd problem where if a forward shipyard is built, then someone
+has to remove all the friendly armies from the previous shipyard, bomb
+the old shipyard facility, then re-drop the armies to move the default
+entry planet forward).  *** CURRENTLY NOT IMPLEMENTED ***
+
+SURRSTART=%d
+  This is the number of planets at which point the surrender counter starts.
+Default is 4 planets.
+
+SURREND=%d
+  This is the number of planets at which the surrender counter stops.
+Default is 7 planets.
+
+SURRLENGTH=%d
+  This is the number of minutes after the surrender counter starts to
+surrender; default is 25 minutes.
+
+ARMY_DEFEND_FACILITIES=%f
+ARMY_DEFEND_BARE=%f
+  These are the chances that an army will destroy an incoming enemy army
+on a planet with facilities and on a planet without facilities, respectively.
+*Example: if ARMY_DEFEND_FACILITIES=0.5 and ARMY_DEFEND_BARE=0.15, if an
+enemy tries to beam down an army to a planet with a RPR, FUEL, SY, or AGRI
+facility, there will be a 50% chance that army will be destroyed (with
+no loss of armies on the planet).  Likewise there is a 15% chance that
+the incoming army will be destroyed on a planet without any facilities.
+Code default is 0% for both (old-style Paradise); new sysdef defaults
+are 50% and 15%, respectively.

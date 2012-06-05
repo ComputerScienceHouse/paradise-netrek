@@ -1,0 +1,84 @@
+# Makefile.in for Paradise server src/common 3.1
+# @configure_input@
+
+@SET_MAKE@
+
+bindir=@bindir@
+datadir=@datadir@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+libexecdir=@libexecdir@
+mandir=@mandir@
+prefix=@prefix@
+srcdir=@srcdir@
+top_srcdir=@top_srcdir@
+
+AR=ar
+ARFLAGS=cruv
+RANLIB=@RANLIB@
+
+CC=@CC@
+CPP=@CPP@
+
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@ -I../../include
+DEFS=@AUTH_DEFS@ @DEFS@
+LDFLAGS=@LDFLAGS@
+LIBS=@LIBS@ -lm
+
+INSTALL=@INSTALL@
+INSTALL_SCRIPT=@INSTALL_SCRIPT@
+INSTALL_DATA=@INSTALL_DATA@
+
+####
+
+GALAXYGEN_LIB_OBJS=galaxygenlib.o
+GALAXYGEN_GEN_OBJS = galaxygen-1.o \
+  	             galaxygen-2.o \
+	             galaxygen-3.o \
+	             galaxygen-4.o \
+	             galaxygen-5.o \
+	             galaxygen-6.o \
+	             galaxygen-7.o \
+	             galaxygen-8.o \
+		     galaxygen-9.o
+
+all: galaxygen.a
+
+galaxygen.a: $(GALAXYGEN_LIB_OBJS) $(GALAXYGEN_GEN_OBJS)
+	$(AR) $(ARFLAGS) $@ $(GALAXYGEN_LIB_OBJS) $(GALAXYGEN_GEN_OBJS)
+	$(RANLIB) $@
+
+# experimental loadable galaxy generator rules
+#GALAXYGEN_GEN_MODULES = galaxygen-1.so \
+#                        galaxygen-2.so \
+#			galaxygen-3.so \
+#			galaxygen-4.so \
+#			galaxygen-5.so \
+#			galaxygen-6.so \
+#			galaxygen-7.so \
+#			galaxygen-8.so \
+#                       galaxygen-9.so
+#
+#galaxygen.a: $(GALAXYGEN_LIB_OBJS)
+#	$(AR) $(ARFLAGS) $@ $(GALAXYGEN_LIB_OBJS)
+#
+#.so.o:
+#	ld -shared $< -o $@
+#
+#galaxygen-modules: $(GALAXYGEN_GEN_MODULES)
+#	touch galaxygen-modules
+#
+clean:
+	-rm -f $(GALAXYGEN_LIB_OBJS) $(GALAXYGEN_GEN_OBJS) galaxygen.a
+#	-rm -f $(GALAXYGEN_GEN_MODULES)
+
+# nothing to do for install
+install:
+# unless we're installing loadable galaxy modules
+#	for i in $(GALAXYGEN_GEN_MODULES); do
+#	  $(INSTALL) $$i $(prefix)/lib
+#	done
+
+distclean:
+	-rm -f Makefile

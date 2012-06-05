@@ -1,0 +1,125 @@
+########################################################################
+	------ Netrek II: Paradise - Server ChangeLog ------
+
+2007-08-27	Jeffrey Watts <watts@jayhawks.net>
+
+	* 3.1p0 release.
+
+	* Moved ChangeLog to docs/CHANGELOG.  Merged in the CHANGES file.
+
+	* Moved docs/Notes to docs/TODO.
+
+	* Added Erik Udo's patch to correct compilation issues.
+
+	* conf.sysdef has been reformatted for ease of modification.  Some
+	new rules are in effect.  By default all ship types are enabled.
+	GalaxyGen-9 is the default now.  Minimum rank for shiptypes is
+	set to zero (with comments indicating the correct rank) in order
+	to make new servers a bit easier to get going.
+
+	* Minor tweaks to etc/motd.
+
+2000-04-26	Jeffrey Watts <watts@jayhawks.net>
+
+	* Cleaned up the snake code.  Snakes now come in as IND by default
+	(before it was random).  The usage statement has been enhanced
+	and now gets issued on any command errors.  I also added 'snake'
+	to the set of available god commands.
+
+	Files: snake/snake.c, snake/snakemove.c, ntserv/message.c,
+	include/defs.h
+
+	* Added the first pass of the new "newbie" robot, RobotServ.  This
+	robot is the modified base practice robot ("Smack") from Bronco.
+	Thanks to Jeffrey Nowakowski for the mods that allow it to be
+	used for our purposes.
+
+	Files: robot/robot_newbie.c, robot/robot_newbie.h
+
+	* Minor fix to 'wm' to make the '-k' option behave like the usage
+	statement says it should behave.  Removed pointless "-h" line in
+	the usage statement.
+
+	Files: tools/tool-wm.c
+
+2000-04-18	Jeffrey Watts <watts@jayhawks.net>
+
+	* Tweaked galaxygen-9.c to diminish variance in the placement of
+	race and independent systems.  Added this ChangeLog.
+
+
+########################################################################
+	$Id: CHANGELOG,v 1.1 2007/08/27 20:03:23 watts Exp $
+
+
+############################# Prior CHANGES ############################
+
+2.4 patch 1b: (Brandon Gillespie / Rob Forsman)
+
+   * Observer bug fix
+   * even better setup script.  Note: it is now in the NETREKDIR, not
+     NETREKDIR/src (so you can remove NETREKDIR/src/setup).
+   * Galaxy Generator #6.  This isn't really more than Heath's Galaxy
+     Generator #3 with a few tweaks on the settings, but I made it
+     another generator rather than a define in config.h so you can use
+     both generators.
+   * Made the robot actually say something in binary (before he didn't)
+   * Fixed the rank exemption for GODLIKE people (top to ranks of royalty)
+     on ships.  Before it was backwards (i.e. Wesleys were exempt).
+   * Exempted GODLIKE people from cluechecker #2
+   * Added the RSA exemption file (Rob's)
+   * fixed the WE ARE CLOSED message (wasn't displaying because line was
+     too long).
+
+2.4 patch 2: (Brandon Gillespie)
+
+   * Adjusted default values per PLC decision
+   * fixed some problems in the setup script
+   * fixed a minor bug with announcing the end of a game.
+
+2.4 patch 3: (Bob Glamm)
+
+   * Despite this patch having my name on it, I contributed no actual
+       code to this patch.  Rather, it is a compilation of bug fixes
+       that people such as Sujal, Rob, and Joe contributed to the 
+       mailing list but were too small to be considered 2.4p3
+       individually.  Maybe they should have been 2.4p2.1, 2.2, etc??
+
+2.4 patch 4: (Mike McGrath)
+
+   * Added support for terrain features.
+   * Implemented asteroids using the new terrain stuff.
+
+2.4 patch 5: (Bob Glamm)
+
+   * I actually did the coding for this one.
+   * Socket code for Mike's terrains (nebula/asteroids)
+
+2.4 patch 6: (Mike McGrath)
+ 
+   * Asteroids are completely finished -- fields have different
+     densities, thicknesses, distances from their parent star, etc.
+   * Asteroids affect ships, in addition to weapons.
+   * New PLC ship values turned default.
+
+2.4 patch 7: (Bob Glamm)
+
+   * Added FEATURE_PACKETS so the server wouldn't hose the client if the
+     client couldn't understand terrain.  Note that these are probably not the
+     same thing as Bronco feature packets.  Define as FEATURE in config.h
+     (on by default).
+
+2.4 patch 8: (Gary Parnes, Ken Germann)
+
+   * Added higher wtemp for butt torpers (Gary Parnes)
+   * Added ship-variable det distances (Ken Germann)
+
+2.4 patch 9: (Mike McGrath)
+
+   * Added basic nebula code
+   * New orbital code, so planets don't end up same dist from stars, and so
+     orbiting planets don't overlap.
+   * New detdist (1750) made default,
+     Variable det dist stuff used for CVs, and UTs, to make them tougher.
+   * New low-fuel based explosion values made default.
+   * Self-hurting torps made optional.

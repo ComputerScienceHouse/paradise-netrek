@@ -1,0 +1,33 @@
+(9/19/94:Brandon)
+
+PARADISE TOOLS
+
+These are tools used for working with the server and its db.
+Most of them must be used while the server is running (set your
+NETREKDIR environment variable).  I would suggest checking out
+all the options available to each tool with the -h flag.
+
+mes      -- used to send messages to the message boards, via a regular
+            terminal.
+
+xtk      -- has various options for controlling the game from a
+            terminal.
+
+wm       -- watch messages sent back and forth.
+
+pl       -- list players in the game.
+
+reset    -- reset the galaxy.
+
+promo    -- check for recent rank promotions.
+
+hs       -- compares old db file with new player db file to create a
+            highscores ranking.
+
+trim     -- used to clean up and trim the player db.
+
+hr       -- creates a listing of the top n players.
+
+ds       -- describe/dump ships; runs the daemon and dumps out
+            stats on each ship in a format dependant upon the given
+            options.

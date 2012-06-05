@@ -1,0 +1,446 @@
+#
+# conf.sysdef
+# NOTE: This is the new ruleset created by Bob Glamm and Jeffrey Watts
+#
+
+#
+# Server options
+#
+#CLUECHECK=25
+#CLUEDELAY=216000
+#CLUETIME=300
+#CLUESOURCE=2
+CONFIRM=0		# Enable RSA authentication
+# MAXLOAD=5.0		# Maximum server load before refusing connections
+MINUPDDELAY=%d		# No idea what this does
+# MINOBSUPDDELAY=%d	# No idea what this does
+# PING_PERIOD=%d	# Not sure what this does
+# PING_ILOSS_INTERVAL=%d	# Not sure what this does
+# PING_GHOSTBUST=%d	# Not sure what this does
+# PING_GHOSTBUST_INTERVAL=%d	# Not sure what this does
+UDP=1			# Enables the UDP protocol
+
+#
+# Game environment options
+#
+AFFECTSHIPTIMERSOUTSIDET=0	# Ship timers affected outside of T?
+BEAMLASTARMIES=1	# Enables beaming up of last armies on last planet
+# BRONCORANKS=0		# Not sure what this does
+GALAXYGENERATOR=9	# Which galaxy generator to use
+GAMESTARTNUKE=1		# Kill everyone when T-mode begins
+JSPLANETCREDIT=1	# If enabled, JS get a bonus for assisting a take
+# LOSING_ADVANTAGE=1.0	# If enabled, losing team an gets an advantage
+# NEWARMYGROWTH=1	# If zero, Bronco-style growth is enabled
+NOPREGAMEBEAMUP=1
+NOTTIMEOUT=10
+# PLANUPDSPD=1		# How fast planets orbit stars
+POPCHOICE=1		# 0 - PII 1/15Hz sweep, 1 - 10Hz progressive scan
+POPSCHEME=1		# 0 - PII exponential growth, 1 - surface-based scheme
+POPSPEED%=14		# Speed of pops - 100 is base, higher is faster
+PLANETSINPLAY=19	# How many planets can be in play at once
+ROBOTSTATS=0		# If enabled, robots accumulate stats
+SURREND=5		# Num planets at which the surrender counter ends
+SURRLENGTH=15		# Num minutes after counter starts until surrender
+SURRSTART=3		# Num planets at which the surrender counter starts
+TESTERS=0		# How many slots are reserved for robots/testers
+TOURN=4			# How many players per team are required for T-mode
+VICTORY_PLANETS=2	# How many enemy planets left are required for victory
+WBBOMBINGCREDIT=1	# If enabled, WB get a bonus for bombing
+
+#
+# Special terrain
+#
+# ASTEROID_EFFECT=PLASMA,MISSILE,FIGHTER,PHOTON,IMPULSE,TRACTOR
+# ASTEROIDDENSITY=50	# Percentage of belt that is asteroids
+# ASTEROIDDENSVAR=20	# Maximum variance from ASTEROIDDENSITY
+# ASTEROIDRADIUS=5	# Belt's distance from its star
+# ASTEROIDRADVAR=1	# Maximum variance from ASTEROIDRADIUS
+# ASTEROIDTHICKNESS=1.0	# Sets the thickness of asteroid belts
+# ASTEROIDTHICKVAR=0.2	# Maximum variance from STEROIDTHICKNESS
+# NEB_EFFECT=SHIELD,SENSOR,WARP,CLOAK
+# NEBULASIZE=10		# Sets the amount of nebulous terrain per seed
+# NUMASTEROID=2		# Number of asteroid belts - max one per star
+# NUMNEBULA=4		# Number of nebulous cloud "seeds"
+NUMWORMPAIRS=2		# Number of wormhole pairs placed in the galaxy
+SUN_EFFECT=PHOTON,PLASMA,MISSILE,FIGHTER
+
+
+#
+# Game physics
+#
+AFTERBURNERS=0		# Enables afterburner
+ARMY_DEFEND_BARE=0.15	# Chance army will defend on planet w/o facilites
+ARMY_DEFEND_FACILITIES=0.5	# Chance army will defend on planet w/facilities
+BUTTTORP_PENALTY=0	# If enabled, there is a penalty for butt-torping
+CAN_BOMB_OWN_SHIPYARD=1	# If enabled, ships can bomb extra shipyards
+CLOAKDURINGWARPPREP=0	# If enabled, one may cloak in warpprep
+CLOAKWHILEWARPING=1	# If enabled, one may cloak while warping
+DURABLESCOUTING=0	# Enables Bronco-style scouting
+EROSION=0.02		# Chance (<1) that damage will be irrepairable
+EVACUATION=1		# If enabled, you are able to beam the last armies off
+FACILITYGROWTH=1	# If enabled, facilities grow from surface properties
+FIREDURINGWARP=0	# If enabled, one can fire while in warp
+FIREDURINGWARPPREP=0	# If enabled, one can fire during warp prep
+FIREWHILEDOCKED=0	# If enabled, one can fire while docked
+FUELEXPLOSIONS=1	# Damage from explosions is fuel-based
+HELPFULPLANETS=1	# If enabled, planets help with fuel and etemp
+HIDDEN=1		# Far away enemy ships are hidden when on
+KILL_CARRIED_ARMIES=0.3	# Probability that a severe damage will kill armies
+# NEWCLOAK=0		# ??
+# NEWTURN=0		# Turning radii linearly dependent upon speed if on
+ORBITDIRPROB=0.5	# Probability that one will orbit clockwise
+PENETRATION=0.05	# Chance (<1) that damage will penetrate shields
+RESOURCEBOMBING=1	# Enables resource bombing
+REVOLT_WITH_FACILITIES=0	# 0 - no revolts with facilities 1 - revolts
+REVOLTS=1		# If enabled, planetary revolts can happen
+RPRDURINGWARP=0		# Allows repairing while in warp
+RPRDURINGWARPPREP=1	# Allows repairing during warp prep
+SHIPYARD_BUILT_BY_SB_ONLY=1	# If enabled, only SBs may build shipyards
+SLOWBOMB=1		# If enabled, resources are much harder to bomb off
+VARIABLE_WARP=1		# If enabled, players can alter their warp speed
+WARPDECEL=1		# 0 - instant deceleration, 1 - low deceleration
+WARPDRIVE=1		# Enables warp engines
+WARPPREP_SUSPENDABLE=0	# If enabled, warpprep can be suspended
+WARPPREPSTYLE=3		# 0 - tractors have no effect 1 - tractors abort at end
+			# 2 - tractors prevent while on 3 - tractors abort
+			# 4 - tractors suspend warpprep
+
+#
+# Ship and weapon options
+#
+# BRONCOSHIPVALS=0	# Sets Bronco-style ship values
+SHIPS=SC,DD,BB,CA,CL,AS,SB,JS,FR,WB,CV,UT,PT
+WEAPONS=PLASMA,TRACTOR,MISSILE,FIGHTER
+IMPROVED_TRACKING=MISSILE,FIGHTER
+MSKILLS=2		# How many kills before one can use missiles
+PLKILLS=2		# How many kills before one can use plasma torps
+
+#
+# Individual ship settings
+#
+
+#
+# Scout (SC) specifications
+#
+SHIP=0
+SC bomb 5
+SC bombflags ARMIES
+SC cloakcost 50
+SC imp.dec 600
+SC maxarmies 0
+SC maxdamage 75
+SC maxfuel 5000
+SC maxshield 75
+SC phaser.cost 525
+SC phaser.damage 75
+SC phaser.fuse 10
+SC phaser.range 4500
+SC plasma.damage -1
+SC recharge 16
+SC repair 80
+SC shieldcost 2
+SC torp.cost 175
+SC torp.damage 25
+SC torp.fuse 16
+SC torp.speed 16
+SC warp.cost 45
+SC warp.maxspeed 20
+SC warp.dec 600
+end
+
+#
+# Destroyer (DD) specifications
+#
+SHIP=1
+DD bombflags NONE
+DD cloakcost 105
+DD imp.dec 500
+DD maxarmies 0
+DD maxdamage 85
+DD maxfuel 7000
+DD maxshield 85
+DD phaser.cost 595
+DD phaser.damage 85
+DD phaser.fuse 10
+DD phaser.range 5100
+DD plasma.damage -1
+DD recharge 22
+DD repair 100
+DD shieldcost 3
+DD torp.cost 210
+DD torp.damage 30
+DD torp.fuse 30
+DD torp.speed 14
+DD warp.cost 60
+DD warp.dec 500
+DD warp.maxspeed 18
+end
+
+#
+# Cruiser (CA) specifications
+#
+SHIP=2
+CA bombflags NONE
+CA cloakcost 130
+CA imp.dec 400
+CA maxarmies 0
+CA maxdamage 100
+CA maxfuel 10000
+CA maxshield 100
+CA phaser.cost 700
+CA phaser.damage 100
+CA phaser.fuse 10
+CA phaser.range 6000
+CA plasma.damage -1
+CA recharge 24
+CA repair 110
+CA shieldcost 4
+CA torp.cost 280
+CA torp.damage 40
+CA torp.fuse 40
+CA torp.speed 12
+CA warp.cost 75
+CA warp.maxspeed 16
+end
+
+#
+# Battleship (BB) specifications
+#
+SHIP=3
+BB bomb 30
+BB bombflags ALL
+BB cloakcost 150
+BB maxarmies 0
+BB maxdamage 130
+BB maxfuel 14000
+BB maxshield 130
+BB phaser.cost 945
+BB phaser.damage 105
+BB phaser.fuse 10
+BB phaser.range 6300
+BB plasma.cost 5000
+BB plasma.damage 250
+BB plasma.fuse 40
+BB plasma.speed 20
+BB plasma.wtemp 400
+BB recharge 28
+BB repair 125
+BB shieldcost 5
+BB torp.cost 300
+BB torp.damage 40
+BB torp.fuse 40
+BB torp.speed 12
+BB warp.cost 85
+BB warp.maxspeed 14
+end
+
+#
+# Assault (AS) specifications
+#
+SHIP=4
+AS armyperkill 4
+AS bomb 10
+AS bombflags ALL
+AS cloakcost 60
+AS detcost 100
+AS detdist 1600
+AS maxarmies 10
+AS maxdamage 400
+AS maxfuel 6000
+AS maxshield 10
+AS nflags UNDOCKABLE,CANORBIT,CANWARP
+AS plasma.damage -1
+AS recharge 20
+AS repair 40
+AS scanrange -1
+AS shieldcost 3
+AS torp.cost 550
+AS torp.damage 60
+AS torp.fuse 10
+AS torp.speed 8
+AS torp.wtemp 40
+AS tractrng 0
+AS tractstr 0
+AS warp.cost 65
+AS warp.maxspeed 12
+end
+
+#
+# Starbase (SB) specifications
+#
+SHIP=5
+SB bombflags NONE
+SB cloakcost 750
+SB detcost 100
+SB detdist 1800
+SB maxarmies 50
+SB maxdamage 600
+SB maxfuel 60000
+SB maxshield 500
+SB numdefn 3
+SB numplan 5
+SB phaser.cost 960
+SB phaser.damage 120
+SB phaser.fuse 4
+SB phaser.range 7200
+SB plasma.cost 6000
+SB plasma.damage 300
+SB plasma.fuse 40
+SB plasma.speed 24
+SB plasma.wtemp 500
+SB rank 0		# Should be 2 normally
+SB recharge 90
+SB repair 170
+SB shieldcost 10
+SB torp.cost 300
+SB torp.damage 30
+SB torp.fuse 45
+SB torp.speed 14
+SB warp.cost 200
+SB warp.maxspeed 4
+end
+
+#
+# AT&T (AT) specifications
+#
+#SHIP=6
+#end
+
+#
+# Jumpship (JS) specifications
+#
+SHIP=7
+JS bombflags NONE
+JS cloakcost 1000
+JS maxarmies 0
+JS phaser.cost 500
+JS phaser.damage 25
+JS phaser.range 3000
+JS plasma.damage -1
+JS rank 0		# Should be 1 normally
+JS warp.cost 200
+JS warp.maxspeed 25
+end
+
+#
+# Frigate (FR) specifications
+#
+SHIP=8
+FR bombflags NONE
+FR cloakcost 140
+FR maxarmies 0
+FR phaser.cost 816
+FR phaser.damage 102
+FR phaser.range 6150
+FR plasma.damage -1
+FR warp.cost 80
+FR warp.maxspeed 15
+end
+
+#
+# Warbase (WB) specifications
+#
+SHIP=9
+WB bomb 100
+WB bombflags ALL
+WB cloakcost 1000
+WB detcost 100
+WB detdist 1800
+WB maxarmies 0
+WB maxdamage 500
+WB maxshield 250
+WB maxfuel 50000
+WB numdefn 2
+WB numplan 3
+WB phaser.cost 1000
+WB phaser.damage 125
+WB phaser.fuse 5
+WB phaser.range 7500
+WB plasma.cost 4000
+WB plasma.damage 400
+WB plasma.fuse 35
+WB plasma.speed 25
+WB plasma.wtemp 300
+WB rank 0		# Should be 1 normally
+WB recharge 80
+WB repair 170
+WB shieldcost 10
+WB torp.cost 450
+WB torp.damage 45
+WB torp.fuse 20
+WB torp.speed 15
+WB warp.cost 200
+WB warp.maxspeed 5
+end
+
+#
+# Light Cruiser (CL) specifications
+#
+SHIP=10
+CL bombflags NONE
+CL cloakcost 115
+CL maxarmies 0
+CL phaser.cost 630
+CL phaser.damage 90
+CL phaser.range 5400
+CL plasma.damage -1
+CL repair 105
+CL warp.cost 70
+CL warp.maxspeed 17
+end
+
+#
+# Carrier (CV) specifications
+#
+SHIP=11
+CV bombflags NONE
+CV cloakcost 135
+CV maxarmies 3		# Must be equal to the number of fighters / 8
+CV missilestored 24	# How many fighters the CV has
+CV phaser.cost 570
+CV phaser.damage 95
+CV phaser.range 6500
+CV plasma.damage -1
+CV rank 0		# Should be 1 normally
+CV warp.cost 80
+CV warp.maxspeed 17
+end
+
+#
+# Utility (UT) specifications
+#
+SHIP=12
+UT bombflags NONE
+UT cloakcost 180
+UT maxarmies 0
+UT maxfuel 90000
+UT phaser.cost 640
+UT phaser.damage 80
+UT phaser.range 5600
+UT plasma.damage -1
+UT rank 0		# Should be 1 normally
+UT warp.cost 75
+UT warp.maxspeed 12
+end
+
+#
+# Patrol Boat (PT) specifications
+#
+SHIP=13
+PT bombflags NONE
+PT cloakcost 40
+PT maxarmies 0
+PT nflags CANORBIT,HASPHASERS,HASMISSILE,MASSPRODUCED
+PT missile.cost 450
+PT missile.count 6
+PT missile.damage 50
+PT missile.fuse 50
+PT missile.speed 15
+PT missile.wtemp 50
+PT missilestored 6
+PT missileturns 1
+PT phaser.cost 300
+PT phaser.damage 50
+PT phaser.range 5000
+PT plasma.damage -1
+end

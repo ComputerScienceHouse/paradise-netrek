@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+# generates a motd with highscores
+#
+# first argument is the old playerfile, if a second argument exists it is
+# assumed to be NETREKDIR.
+#
+# NOTE: the Old playerfile is assumed to be a gzipped file!  This is because
+# the dbbackup script gzips it.
+#
+
+NETREKDIR=@NETREKDIR@
+
+if [ $# -eq 0 ]; then
+	echo "Syntax: '$0 <old player file> [NETREKDIR]'"
+	exit 1
+else
+	OLDPLAYERS=$1
+fi
+
+if [ X$2 != X ]; then
+        NETREKDIR=$2
+fi
+
+export NETREKDIR
+
+if [ ! -f ${NETREKDIR}/bin/hs ]; then
+	echo "$0: Highscores program not found, exiting."
+	echo "$0: (expecting: ${NETREKDIR}/bin/hs)"
+	exit 1
+fi
+
+if [ ! -f ${NETREKDIR}/bin/hr ]; then
+	echo "$0: Honorroll program not found, exiting."
+	echo "$0: (expecting: ${NETREKDIR}/bin/hr)"
+	exit 1
+fi
+
+if [ ! -f ${NETREKDIR}/${OLDPLAYERS} ]; then
+	echo "$0: Old player db not found, exiting."
+	echo "$0: (expecting: ${NETREKDIR}/${OLDPLAYERS})"
+	exit 1
+else
+	echo -n "$0: Unzipping ${NETREKDIR}/${OLDPLAYERS}..."
+	gzip -d ${NETREKDIR}/${OLDPLAYERS}
+	echo "Done."
+fi
+
+if [ ! -f ${NETREKDIR}/etc/motd.body ]; then
+	echo "$0: \"motd.body\" file not found, exiting."
+	echo "$0: (expecting: ${NETREKDIR}/etc/motd.body)"
+	exit 1
+fi
+
+exit
+
+cat ${NETREKDIR}/etc/motd.body > ${NETREKDIR}/etc/motd
+echo "Scores last updated: `date`" >> motd
+${NETREKDIR}/bin/hs -n 35 -c 0 ${NETREKDIR}/${OLDPLAYERS} ${NETREKDIR}/etc/db.players >> ${NETREKDIR}/etc/motd
+${NETREKDIR}/bin/hr 120 -m -f ${NETREKDIR}/etc/db.players >> ${NETREKDIR/etc/motd
+
+echo -n "$0: gzipping ${NETREKDIR}/${OLDPLAYERS}..."
+gzip -9 ${NETREKDIR}/${OLDPLAYERS}
+echo "Done."

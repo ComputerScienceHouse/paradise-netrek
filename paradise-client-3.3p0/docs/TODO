@@ -1,0 +1,109 @@
+$Id: TODO,v 1.1 2007/08/27 21:30:19 watts Exp $
+
+Things to do for the TedTurner client:
+
+2000/03/15 (conversation with Rado):
+Messaging - when invoked with the message command (cursor on local or map),
+it stays in message-mode until one presses Enter or Esc, perhaps
+controlled by an .xtrekrc option. (it irritated [Rado] more than once when
+[he] typed something and came over the right border that it interpreted
+[his] text as commands, almost always draining or killing [him].)
+Suggestion for option-name: continuousMessage.
+
+- From Rado Smiljanic <am3a035@math.uni-hamburg.de>
+
+>I want to mention some things to the binary, which you might have already
+>adressed or are working at:
+>- "received invisible torp." message still present.
+>- differences from "P" to TT:
+>        - the help window is titled "help" -> "HELP!"
+>        - the coloring of the bars for the localshipstats in general, and the
+>                length for Shield and Fuel in particular (in "P" behaves like
+>                rainbow-dashboard)
+>- speed is not as fast as the old "P", and when sending the X from a sun to a
+>        remote AIX-Display it gets ugly slow !
+>        (normal rtt and avrt of 20 ms increases to 1000 ms, with the old "P"
+>        it didn't, at least not that much that it would raise attention)
+
+- Eric reported that the client bug that appears when flying near the right
+edge is a Paradise-server specific pproblem.  It does not happen in non-
+Paradise servers.
+
+- From Jeffrey Watts:
+
+> I've noticed a rather nasty graphics bug in TT 1.3.1.  I don't remember if
+> this bug was present in older TT releases.
+>
+> I know this happens under Linux (2.0.36 - Red Hat 5.2 - glibc - XFree86
+> 3.3.3.1).  I'm not sure if it happens on other Unices.
+>
+> Description:  the area to the right of the right boundary is filled with a
+> weird pattern, and when you fly near the right edge, CPU use goes to 100%
+> and the client starts crawling.  If you fly away from the edge, it goes
+> away.
+
+I can't reproduce this bug under IRIX 6.5 and Solaris 2.5.1.  It looks like
+a Linux specific bug, and I can't say whether it is TT related or a bug
+in the kernel/glibc/X/etc. -Dave
+
+I *have* seen this bug under Irix.  Somehow some pixmaps (FED SB, I think)
+are being spewed all over beyond the rightmost-edge of the galaxy and
+causing the client to crawl.
+
+- Update on the bug reported by Nick:
+
+>Ok, found a bug in ted that is reproducable...
+>I entered guinness in observer mode, picked a team,
+>rotated the galaxy 180 degrees, waited about 2 seconds
+>and it crashed giving...
+>
+>XIO:  fatal IO error 14 (Bad address) on X server ":0.0"
+>      after 8981 requests (8979 known processed) with 3 events remaining.
+>
+>I did have XPM mode enabled, as I thought it'd be neat to see the
+>colors while observing.
+>
+>Hope that's helpful.
+>
+>Nick
+
+- Solaris 2.5.1 binary exhibits the following problem.  Reproducible?
+
+>From Nicholas James Slager <slagerni@cse.msu.edu>
+ 
+>Well, it's happened to me twice now.  Both times when I tried to
+>re-enter the game by hitting C for a ca.  Nothing exceptionally
+>special about the way I did it either.  The following message did
+>appear...
+>XIO:  fatal IO error 14 (Bad address) on X server ":0.0"
+>      after 4449762 requests (4449761 known processed) with 1 events
+>      remaining. 
+>XIO:  fatal IO error 14 (Bad address) on X server ":0.0"
+>      after 1527858 requests (1527857 known processed) with 2 events
+>      remaining.
+ 
+>Not sure that helps... but it's there :)
+
+- Self-owned torps should be different color/size from friendly torps.
+
+- Phaser colors don't match 2.4 client.
+
+- Planets < 4 armies should not disappear off galactic.
+
+- Some people have reported sluggishness with TT.  I don't notice this,
+but maybe some feedback or testing might help.
+
+- Documentation.
+
+- Needed images (not complete):
+galactic surface images (STND, THIN, etc)
+galactic surface overlay images (STND, THIN, etc)
+galactic resource images (Arable, Dilithium, etc)
+galactic resource overlay images (Arable, Dilithium, etc)
+local map surface overlay images
+local resource overlay images
+local age images (scout time)
+local age overlay images
+
+document -DBROKEN_STIPPLE (if scrollbars are blank enable this)
+document -DUNIX_SOUND

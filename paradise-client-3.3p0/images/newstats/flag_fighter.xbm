@@ -1,0 +1,4 @@
+#define flag_fighter_width 5
+#define flag_fighter_height 8
+static char flag_fighter_bits[] = {
+   0x00, 0x04, 0x04, 0x0e, 0x1f, 0x04, 0x0a, 0x00};

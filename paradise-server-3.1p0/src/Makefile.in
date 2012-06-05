@@ -1,0 +1,89 @@
+# Makefile.in for Paradise server src/common 3.1
+# @configure_input@
+
+@SET_MAKE@
+
+bindir=@bindir@
+datadir=@datadir@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+libexecdir=@libexecdir@
+mandir=@mandir@
+prefix=@prefix@
+srcdir=@srcdir@
+top_srcdir=@top_srcdir@
+
+AR=ar
+ARFLAGS=cruv
+RANLIB=@RANLIB@
+
+CC=@CC@
+CPP=@CPP@
+
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@ -I./include
+DEFS=@DEFS@
+LDFLAGS=@LDFLAGS@
+LIBS=@LIBS@ -lm
+
+INSTALL=@INSTALL@
+INSTALL_SCRIPT=@INSTALL_SCRIPT@
+INSTALL_DATA=@INSTALL_DATA@
+
+AUTH_PROG=@AUTH_PROG@
+
+# only build if we find -lncurses or -lcurses
+PLAYER_EDITOR=@PLAYER_EDITOR@
+
+#####
+
+L_DIRS=common
+S_DIRS=daemon listen ntserv robot snake
+P_DIRS=tools $(PLAYER_EDITOR)
+
+all: authlib libs server progs
+
+libs:
+	@for dir in $(L_DIRS); do \
+	  (cd $${dir} && $(MAKE)); \
+	done
+
+authlib:
+	@if test "x$(AUTH_PROG)" = xkeycomp; then \
+	  cd res-rsa && $(MAKE); \
+	fi
+
+server:
+	@for dir in $(S_DIRS); do \
+	  (cd $${dir} && $(MAKE)); \
+	done
+
+progs:
+	@for dir in $(P_DIRS); do \
+	  (cd $${dir} && $(MAKE)); \
+	done
+
+clean:
+	@for dir in $(L_DIRS) $(S_DIRS) $(P_DIRS); do \
+	  (cd $${dir} && $(MAKE) clean); \
+	done
+	@if test "x$(AUTH_PROG)" = xkeycomp; then \
+	  cd res-rsa && $(MAKE) clean; \
+        fi
+
+install:
+	@for dir in $(L_DIRS) $(S_DIRS) $(P_DIRS); do \
+	  (cd $${dir} && $(MAKE) install); \
+	done
+	@if test "x$(AUTH_PROG)" = xkeycomp; then \
+	  cd res-rsa && $(MAKE) install; \
+	fi
+
+distclean:
+	@for dir in $(L_DIRS) $(S_DIRS) $(P_DIRS); do \
+	  (cd $${dir} && $(MAKE) distclean); \
+	done
+	@if test "x$(AUTH_PROG)" = xkeycomp; then \
+	  cd res-rsa && $(MAKE) distclean; \
+	fi
+	-rm -f Makefile include/config.h

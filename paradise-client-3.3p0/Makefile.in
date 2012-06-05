@@ -1,0 +1,73 @@
+#
+# NetrekII: Paradise Client Makefile
+#
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+datadir=@datadir@
+mandir=@mandir@
+
+@SET_MAKE@
+INSTALL=@INSTALL@
+INSTALL_DATA=@INSTALL_DATA@
+SHIP_BITMAP_PATH=@SHIP_BITMAP_PATH@
+
+all:
+	(cd src && $(MAKE))
+	sed -e "s,@MAN_SHIP_BITMAP_PATH@,${SHIP_BITMAP_PATH},g" doc/paradise.1.in > doc/paradise.1
+
+install: all
+	-mkdir $(prefix)
+	-mkdir $(exec_prefix)
+	-mkdir $(bindir)
+	-mkdir $(datadir)
+	-mkdir $(mandir)
+	-mkdir $(mandir)/man1
+	$(INSTALL) src/netrek.paradise $(bindir)/paradise
+
+	# make image directory hierarchy
+	-mkdir $(datadir)/paradise
+	-mkdir $(datadir)/paradise/images
+
+	-for i in Fed Kli Ori Rom; do \
+	  mkdir $(datadir)/paradise/images/$$i; \
+	  mkdir $(datadir)/paradise/images/$$i.bronco; \
+	  mkdir $(datadir)/paradise/images/$$i.colored; \
+	  mkdir $(datadir)/paradise/images/$$i.bronco.colored; \
+	done
+
+	-mkdir $(datadir)/paradise/images/planets
+	-mkdir $(datadir)/paradise/images/planets/asteroids
+	-for i in A F R S T; do \
+	  mkdir $(datadir)/paradise/images/planets/$$i; \
+	  mkdir $(datadir)/paradise/images/planets/$${i}_overlay; \
+        done
+
+	-for i in weapons newstats intro Ind; do \
+	  mkdir $(datadir)/paradise/images/$$i; \
+	done
+
+	# cheat on installing the images
+	for i in `find images -name \*.x\[bp\]m -print`; do \
+	  $(INSTALL_DATA) $$i $(datadir)/paradise/$$i; \
+	done
+
+	# install the man page
+	$(INSTALL_DATA) doc/paradise.1 $(mandir)/man1/paradise.1
+
+static_images:
+	(cd src && $(MAKE) static_images)
+
+dynamic_images:
+	(cd src && $(MAKE) dynamic_images)
+
+unused_images:
+	(cd src && $(MAKE) unused_images)
+
+clean:
+	(cd src && $(MAKE) clean)
+
+distclean: clean
+	(cd src && $(MAKE) distclean)
+	-rm -f Makefile config.* include/config.h doc/paradise.1

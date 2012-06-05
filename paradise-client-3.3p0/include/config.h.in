@@ -1,0 +1,90 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+/* Header defines */
+#undef HAVE_FCNTL_H
+#undef HAVE_UNISTD_H
+#undef HAVE_SYS_TIME_H
+#undef HAVE_SYS_WAIT_H
+#undef HAVE_SYS_UTSNAME_H
+#undef HAVE_PWD_H
+#undef HAVE_STRINGS_H
+#undef HAVE_BSTRING_H
+#undef HAVE_NETINET_IN_H
+#undef HAVE_NETINET_TCP_H
+#undef HAVE_NETDB_H
+#undef HAVE_SYS_SELECT_H
+#undef HAVE_SYS_SOCKET_H
+#undef HAVE_SYS_PARAM_H
+#undef HAVE_SYS_STAT_H
+#undef HAVE_SYS_TYPES_H
+#undef HAVE_ARPA_INET_H
+#undef HAVE_XPM_H
+#undef HAVE_X11_XPM_H
+
+/* define to mean sys/time.h better have struct tm */
+#undef TM_IN_SYS_TIME
+
+/* more time.h bogosity */
+#undef TIME_WITH_SYS_TIME
+
+/* Define if mem*() are in memory.h. */
+#undef NEED_MEMORY_H
+
+/* Define if you have zlib.h. */
+#undef HAVE_ZLIB_H
+
+/* Define if you have unsigned chars by default. */
+#undef __CHAR_UNSIGNED__
+
+/* Define if you have a (working) wait3. */
+#undef HAVE_WAIT3
+
+/* Define if you have STDC_HEADERS. */
+#undef STDC_HEADERS
+
+/* Define if your const works. */
+#undef const
+
+/* Define return type of signal. */
+#define RETSIGTYPE void
+
+/* Define if you have these */
+#undef HAVE_GETTIMEOFDAY
+#undef HAVE_STRDUP
+#undef HAVE_STRSTR
+#undef HAVE_UNAME
+
+/*****************************************************************************
+ ** no user servicable parts below - just bogus structure/prototype         **
+ ** declarations for systems that are lacking.                              **
+ *****************************************************************************/
+
+#ifdef STDC_HEADERS
+#define P(x) x
+#else
+#define P(x) ()
+#endif
+
+#ifndef HAVE_GETTIMEOFDAY
+struct timeval {
+  long tv_sec;
+  long tv_usec;
+};
+
+struct timezone {
+  int tz_minuteswest;
+  int tz_dsttime;
+};
+#endif /* HAVE_GETTIMEOFDAY */
+
+#ifndef HAVE_UNAME
+#define SYS_NMLN 256
+struct utsname
+{
+  char sysname[SYS_NMLN];
+  char release[SYS_NMLN];
+};
+#endif
+
+#endif

@@ -1,0 +1,4 @@
+#define mplasmatorp_width 	5
+#define mplasmatorp_height 	5
+static char mplasmatorp_bits[] = {
+0x04, 0x0e, 0x1f, 0x0e, 0x04};

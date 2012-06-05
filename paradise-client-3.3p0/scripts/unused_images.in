@@ -1,0 +1,59 @@
+#! @PERL@
+#
+# prints a list of unused image #defines.
+#
+# Bill Dyess, Feb '95.
+#
+die "Usage: $0 <images.h> <files to check>\n" unless $#ARGV > 1;
+
+# initialize %defines to those defines that are used, but not explicitly.
+%defines = (
+I_IND_BB, 1, I_IND_CA, 1, I_IND_CL, 1, I_IND_CV, 1, I_IND_DD, 1,
+I_IND_FR, 1, I_IND_JS, 1, I_IND_SB, 1, I_IND_SC, 1, I_IND_UT, 1,
+I_IND_WB, 1, I_KLI_AT, 1, I_KLI_BB, 1, I_KLI_CA, 1, I_KLI_CL, 1,
+I_KLI_CV, 1, I_KLI_DD, 1, I_KLI_FR, 1, I_KLI_JS, 1, I_KLI_PT, 1,
+I_KLI_PU, 1, I_KLI_SB, 1, I_KLI_SC, 1, I_KLI_UT, 1, I_KLI_WB, 1,
+I_ORI_AT, 1, I_ORI_BB, 1, I_ORI_CA, 1, I_ORI_CL, 1, I_ORI_CV, 1,
+I_ORI_DD, 1, I_ORI_FR, 1, I_ORI_JS, 1, I_ORI_PT, 1, I_ORI_PU, 1,
+I_ORI_SB, 1, I_ORI_SC, 1, I_ORI_UT, 1, I_ORI_WB, 1, I_ROM_AT, 1,
+I_ROM_BB, 1, I_ROM_CA, 1, I_ROM_CL, 1, I_ROM_CV, 1, I_ROM_DD, 1,
+I_ROM_FR, 1, I_ROM_JS, 1, I_ROM_PT, 1, I_ROM_PU, 1, I_ROM_SB, 1,
+I_ROM_SC, 1, I_ROM_UT, 1, I_ROM_WB, 1);
+$images_h = $ARGV[0];
+open(IN,"$images_h") || die "can't open $images_h: $!";
+while(<IN>) {
+  next unless /^#define/;
+  $identifier = (split(' ',$_))[1];
+  next unless $identifier =~ /^I_[A-Z0-9_]*$/;
+  $defines{$identifier}--;	# -1 is defined, add one for each occurance.
+}
+close(IN);
+@ARGV = grep(!/^$images_h$/,@ARGV);
+while(<>) {
+  while(/I_/) {
+    s/(I_[A-Z0-9_]*)//;
+    $identifier = $1;
+    $defines{$identifier}++;
+  }
+}
+$count = 0;
+foreach $def (sort keys %defines) {
+  $tmp = $def;
+  if($def =~ /^I_HEADER/) {
+    $tmp =~ s/[1-9]/1/g;
+  } else {
+    $tmp =~ s/[1-9]/0/g;
+  }
+  if($defines{$def} < 0) {	# defined but never used
+    # accounts for offsets
+    if($tmp ne $lastdefined) {
+      print "$def unused.\n";
+      $count++;
+    }
+  } else {
+    if($tmp ne $lastdefined) {
+      $lastdefined = $def;
+    }
+  }
+}
+print "$count unused images.\n";

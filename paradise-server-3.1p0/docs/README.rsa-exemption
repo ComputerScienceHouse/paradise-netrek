@@ -1,0 +1,3 @@
+See src/ntserv/socket.c as a starting point for the format of this
+file.  If it doesn't exist or is empty, nobody is exempt from RSA if
+authorization is enabled.

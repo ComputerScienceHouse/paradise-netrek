@@ -1,0 +1,170 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(Makefile.in)
+
+dnl do the header thing
+AC_CONFIG_HEADER(src/include/config.h)
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_RANLIB
+AC_PROG_INSTALL
+
+dnl Allows use of $(MAKE)
+AC_PROG_MAKE_SET
+
+CURSESLIBS=""
+TERMLIBS=""
+PLAYER_EDITOR=pped
+
+dnl Checks for libraries.
+AC_CHECK_LIB(crypt, crypt, [CRYPTLIB="-lcrypt"])
+dnl Replace `main' with a function in -lncurses:
+AC_CHECK_LIB(ncurses, tcgetattr,
+  [CURSESLIBS="-lncurses"],
+
+  dnl Replace `main' with a function in -lcurses:
+  AC_CHECK_LIB(curses, tcgetattr,
+    [CURSESLIBS="-lcurses"],
+    [
+      PLAYER_EDITOR=""
+
+      echo
+      echo "--- Couldn't find a curses library."
+      echo "--- The player editor (pped) will not be built."
+      echo
+    ]
+  )
+)
+
+[ if test "x$PLAYER_EDITOR" = xpped; then ]
+    AC_CHECK_LIB(termcap, tcgetattr, [TERMLIBS="-ltermcap"])
+[ fi ]
+
+ZLIB=""
+
+AC_CHECK_LIB(z, uncompress, [ZLIB=-lz],
+[
+  echo
+  echo "*** Could not find compression library (libz)."
+  echo "*** Make sure that it is installed, and set"
+  echo "*** the LDFLAGS environment variable to point to it"
+  echo "*** with -Lpath before re-running configure."
+  echo
+  exit 1
+]
+)
+
+dnl Checks for header files.
+dnl if STDC_HEADERS is defined, this includes
+dnl assert.h ctype.h float.h limits.h math.h
+dnl setjmp.h signal.h stdarg.h stdio.h stdlib.h string.h time.h
+dnl errno.h stddef.h (locale.h wchar.h iso646.h wctype.h)
+dnl
+dnl this software requires STD ANSI headers.
+
+AC_HEADER_STDC
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS(fcntl.h limits.h malloc.h sys/file.h sys/ioctl.h unistd.h sys/time.h arpa/inet.h crypt.h)
+
+dnl Check for ZLIB headers
+AC_CHECK_HEADERS(zlib.h, [/bin/true],
+[
+  echo 
+  echo "*** Could not find compression library header (zlib.h)."
+  echo "*** Make sure that it is installed and set"
+  echo "*** the CPPFLAGS environment variable to point to it"
+  echo "*** with -Ipath before re-running configure."
+  echo 
+  exit 1
+]
+)
+
+dnl Check for uptime
+UPTIME_PATH=""
+HAVE_UPTIME=""
+AC_PATH_PROG(UPTIME_PATH, uptime)
+
+[
+  if test "x$UPTIME_PATH" != x; then
+    HAVE_UPTIME="-DHAVE_UPTIME"
+  fi
+]
+
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_TIME
+AC_STRUCT_TM
+AC_STRUCT_TIMEZONE
+
+dnl Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+AC_FUNC_MEMCMP
+AC_FUNC_SETVBUF_REVERSED
+AC_TYPE_SIGNAL
+AC_FUNC_UTIME_NULL
+AC_FUNC_WAIT3
+AC_CHECK_FUNCS(gethostname gettimeofday strdup strerror sysconf)
+
+SETSID=""
+AC_ARG_ENABLE(old-setsid,
+[  --enable-old-setsid     Enable old-style setsid()/terminal detach support],
+
+[
+  if test "x$enableval" != xno; then
+    SETSID="-DSETSID_DOESNT_DETACH_TERMINAL"
+  fi
+])
+
+dnl Check for RSA authentication
+AUTH_OBJS=""
+AUTH_DEFS=""
+AUTH_LIBS=""
+AUTH_PROG=""
+AUTH_PROG_OBJS=""
+AUTH_DEP_LIB=""
+AUTH_DEP_VPATH=""
+
+AC_ARG_WITH(gmp, [  --with-gmp[=DIR]        Enable GNU MP support for RSA])
+
+AC_ARG_ENABLE(rsa,
+[  --enable-rsa            Enable RSA authentication support in server],
+[
+  if test ! -r $srcdir/src/res-rsa/configure; then
+    echo "  --- RSA package not found in $srcdir/src/res-rsa."
+    echo "  --- Building without RSA support."
+  fi
+]
+)
+
+if test -r $srcdir/src/res-rsa/configure; then
+  AC_CONFIG_SUBDIRS($srcdir/src/res-rsa)
+  AUTH_DEFS="-DAUTHORIZE"
+  AUTH_PROG="keycomp"
+  AUTH_PROG_OBJS="rsa_keycomp.o"
+  AUTH_DEP_VPATH="src/res-rsa"
+  AUTH_LIBS="\`egrep '^GMP_LIB' ../res-rsa/Makefile | awk -F= '{print \$\$2}'\`"
+fi
+
+if test "x$prefix" = xNONE; then
+  prefix="$ac_default_prefix"
+fi
+
+NETREKDIR=${prefix}
+
+AC_SUBST(NETREKDIR)
+AC_SUBST(ZLIB)
+AC_SUBST(CRYPTLIB)
+AC_SUBST(CURSESLIBS)
+AC_SUBST(TERMLIBS)
+AC_SUBST(AUTH_OBJS)
+AC_SUBST(AUTH_DEFS)
+AC_SUBST(AUTH_LIBS)
+AC_SUBST(AUTH_PROG)
+AC_SUBST(AUTH_PROG_OBJS)
+AC_SUBST(AUTH_DEP_LIB)
+AC_SUBST(AUTH_DEP_VPATH)
+AC_SUBST(PLAYER_EDITOR)
+AC_SUBST(HAVE_UPTIME)
+AC_SUBST(SETSID)
+
+AC_OUTPUT(src/Makefile src/common/Makefile src/daemon/Makefile src/daemon/galaxygen/Makefile src/listen/Makefile src/ntserv/Makefile src/robot/Makefile src/snake/Makefile src/tools/Makefile src/pped/Makefile bin/dbbackup bin/init.shutdown bin/init.startup bin/makemotd bin/ntstart bin/ntstop Makefile)

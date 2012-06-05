@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# Server startup script for NetrekII (Paradise)
+#
+# If args1 exists it is assumed it is NETREKDIR, and will be used
+# in place of whatever NETREKDIR was before.  If NETREKDIR is not
+# found it will attempt to find it in ../etc/conf.netrekdir
+#
+
+NETREKDIR=@NETREKDIR@
+
+if [ X$1 != X ]; then
+	NETREKDIR=$1
+fi
+
+export NETREKDIR
+
+PORT=2592
+PLPORT=2591
+LOGS="${NETREKDIR}/logs"
+
+if [ ! -f "${NETREKDIR}/bin/listen" ]; then
+	echo "$0: ${NETREKDIR}/bin/listen not found, exiting."
+	exit 1
+fi
+
+if [ -f "${LOGS}/server.log" ]; then
+	echo "$0: Moving server logfile to server.log.old"
+	mv ${LOGS}/server.log ${LOGS}/server.log.old
+fi
+
+if [ -f ${LOGS}/startup.log ]; then
+	echo "$0: Moving startup.log to startup.log.old"
+	mv ${LOGS}/startup.log ${LOGS}/startup.log.old
+fi
+
+echo "Netrek Server Startup at `date` by ${USER}" >> "${LOGS}/startup.log"
+echo "NETREKDIR=${NETREKDIR}" >> "${LOGS}/startup.log"
+echo "PORT=${PORT}" >> "${LOGS}/startup.log"
+echo "PLPORT=${PLPORT}" >> "${LOGS}/startup.log"
+
+# Startup listen
+${NETREKDIR}/bin/listen -p ${PORT}
+
+# Startup the connected players port
+if [ -f ${NETREKDIR}/faucet -a -f ${NETREKDIR}/pl ]; then
+    echo "$0: Starting player listing on port ${PLPORT}" >> ${LOGS}/startup.log
+    ${NETREKDIR}/faucet ${PLPORT} -out pl &
+fi

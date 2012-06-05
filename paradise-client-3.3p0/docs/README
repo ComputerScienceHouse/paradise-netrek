@@ -1,0 +1,57 @@
+$Id: README,v 1.1 2007/08/27 21:30:19 watts Exp $
+
+README for Paradise Netrek client 3.3p0
+
+This is a stable release of the Paradise client.  This client was formerly
+known as the "TedTurner" client, and it is a full-color version of the
+older Paradise 2.x clients.  This client is required to play on Paradise
+servers, but it can also be used to play on other Netrek servers such as
+Bronco, Hockey, Chaos and INL.
+
+For more information on Paradise, visit http://paradise.netrek.org/
+For more information on Netrek, visit http://www.netrek.org/
+
+This client is distributed in two forms: binary and source.  To prevent
+clever players from modifying the source to cheat on the public servers, a
+Netrek client uses RSA public key cryptography to allow only special
+RSA-enabled ("blessed") clients to connect to and play on RSA-enabled
+servers.  Some servers are RSA-disabled, so either blessed or unblessed
+clients are allowed.
+
+If you are interested in playing Paradise or Netrek, you need to download
+the binary for your platform.  You do not need to download the source code
+and compile it.
+
+Paradise client RSA-enabled binaries and source code are available from:
+
+	ftp://ftp.netrek.org/pub/netrek/clients/tedturner/
+	ftp://ftp.netrek.org/pub/netrek/paradise/
+
+The binaries are generally named in the following way:
+
+	paradise-client-"version"."vendor_name"-"OS_name"-"OS-version"
+
+For example, paradise client 3.3p0 for an SGI IRIX 6.5 workstation and
+paradise client 3.3p0 for an Intel Linux system based on glibc2.1 would be:
+
+	paradise-client-3.3p0.sgi-IRIX-6.5
+	paradise-client-3.3p0.intel-Linux-glibc2.1
+
+If a binary for your platform does not exist and you are interested in
+helping with the port (i.e. you can port it yourself or can provide remote
+access to the machine), please contact the Paradise client maintainer(s)
+and/or the paradise work group.
+
+If you find bugs or problems, please report them back to the maintainer.  
+Suggestions and comments are also welcome.
+
+Maintainer:		Dave Ahn <ahn@netrek.org>
+			Jeffrey Watts <watts.jayhawks.net>
+Paradise Work Group:	paradise-workers@lists.netrek.org
+
+Special thanks to the following people who have helped with client
+building, porting, debugging, etc.:
+
+Mike Roda <mroda@ipass.net>		Intel/Linux
+Nick Slager <slagerni@cse.msu.edu>
+Jeffrey Watts <watts@jayhawks.net>	Intel/Linux

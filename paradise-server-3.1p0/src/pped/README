@@ -1,0 +1,44 @@
+pped (version 1.1)
+
+This is a relatively simple Paradise player database editor.  Although I
+have given it a reasonable amount of testing, there probably still are
+bugs.  So, please always keep backups of your .players file.
+
+Usage: pped [file]
+Where [file] is the pathname of the player database file to be edited.
+If no file is specified, then it looks for a file called .players in
+the current directory
+
+
+**** Important notes ****
+
+I don't have any instructions yet, my apologies for this.  You can get
+a list of available commands by entering '?' at a prompt.
+
+When you are in the edit screen, where the prompt looks like
+"Edit: Command (? for help) -->", you need to specify Save to record
+whatever changes you've made.  This only changes the database in
+memory, it won't affect any files.
+
+When you specify Save in the Index screen, however, you will be prompted
+for a filename, and then the entire database is written into that file.
+This is the only place where a file can be changed by this program.
+
+pped reads the entire db into memory, so when you edit individual entries,
+nothing will actually be changed in the .players file until you save
+the whole thing out.  The main disadvantage to this is that if your
+.players file is very large, this becomes inefficient.  I will probably
+make it disk-based in future versions.
+
+The editor will adjust to different terminal heights (i.e. number of
+rows), but it assumes that your terminal is at least 80 columns wide.
+
+pped is written entirely in ANSI C.  So, you will need to supply whatever
+flags are needed to put your compiler in ANSI mode.  Or, you can use gcc.
+
+Do NOT change the .players file that is being used by the server if
+there are people logged in to the server.
+
+
+Please send comments/bug reports/suggestions/etc to hakehoe@icaen.uiowa.edu
+

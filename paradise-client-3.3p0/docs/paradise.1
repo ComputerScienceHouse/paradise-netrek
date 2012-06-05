@@ -1,0 +1,619 @@
+.\" -*- nroff -*-
+.\" Copyright (c) 1995
+.\" written by Bob Glamm
+.TH paradise 1 "15 March 2000" "Paradise Hackers" "Paradise Hackers"
+.de BP
+.sp
+.ti \-.2i
+\(**
+..
+
+.SH NAME
+paradise \(em\& Space Conquest game based loosely on Star Trek
+
+.SH SYNOPSIS
+paradise [options]
+
+.SH DESCRIPTION
+.I paradise
+is a multiplayer network game based loosely on Star Trek.  In the standard
+version, two teams play against each other to take planets, shoot at each
+other, and to just generally have a good time.
+
+.SH OPTIONS
+.I paradise
+accepts the following options:
+
+.SH COMMON OPTIONS
+.TP
+.I \-h host
+Connects to a specific
+.I host
+server.  Default is to connect to the metaserver (see
+.I -m
+below).
+
+.TP
+.I \-p port
+Connect to a specific
+.I port
+on a specific
+.I host
+.  The default is port number 2592, which is correct for the current paradise
+servers.  Usually the 
+.I -h
+and
+.I -p
+options are used together for league games.
+
+.SH DISPLAY OPTIONS
+.TP
+.I \-x
+Disable XPM mode.  Full color mode (using XPMs) is the normal mode for
+Paradise.  Disabling full color (XPM) mode will result in faster window
+redraws.
+
+.TP
+.I \-k
+Turn on cookie mode (valid only when XPM is enabled).
+
+.TP
+.I \-K
+Turn off cookie mode (default in XPM mode).
+
+.TP
+.I \-O
+Turn on OR display mode (valid only when XPM is enabled).
+
+.SH EMERGENCY RESTART OPTIONS
+
+.TP
+.I \-2
+Force client to act as if it is connecting to a paradise server.  Generally,
+this option is not needed, except for an emergency reconnect.
+
+.TP
+.I \-G playernum
+.TP
+.I \-s port
+Use these options to do an emergency reconnect to the paradise server you
+were on.  The arguments to
+.I -G
+and
+.I -s
+are output when the paradise client is connected to the server.
+
+.SH OTHER OPTIONS
+.TP
+.I \-c
+Dump .xtrekrc/.paradiserc/.tedrc defaults.  The defaults that are
+dumped out can be used as a starting point for creating your
+own .xtrekrc/.paradiserc/.tedrc file.
+
+.TP
+.I \-d display
+Sets paradise window to display
+.I display
+instead of the display pointed to by the environment variable DISPLAY.
+
+.TP
+.I \-e
+Checks the expire time on the client.  Clients expire because of RSA 
+requirements.
+
+.TP
+.I \-f
+Displays a short message on how to get a new client via ftp.
+
+.TP
+.I \-m
+Connect to metaserver to display a list of active servers with the number of
+players on each.
+
+.TP
+.I \-o
+Use old (non-RSA) authorization.  WARNING: this option is
+.I obsolete
+, and probably does not even work anymore.
+
+.TP
+.I \-r defaults_file
+Use
+.I defaults_file
+as your paradise defaults file instead of ~/.xtrekrc or ~/.paradiserc.
+
+.TP
+.I \-t title
+Use
+.I title
+as the title for your paradise window.
+
+.TP
+.I \-u
+Print usage information, including a list of options and a reference to the
+current WWW documentation page.
+
+.TP
+.I \-v
+Verbose image loading.  Images are printed out or displayed in the warning
+window as they are loaded.
+
+.TP
+.I \-C name
+Use
+.I name
+as your alias when connecting to a paradise server.
+
+.TP
+.I \-F file
+Replays a paradise game stored in
+.I file
+.  Use the recorder option within paradise to generate the file.
+
+.TP
+.I \-P password
+Use
+.I password
+as your password when connecting to a paradise server.
+
+.TP
+.I \-R
+Use normal RSA client authentication (default).  Required for some older
+Bronco servers.
+
+.SH DEFAULTS FILE
+On startup, the client reads defaults from either 
+.I ~/.xtrekrc
+or
+.I ~/.paradiserc.
+This file can contain blank lines, comment lines (which begin with #),
+or options.
+Options are one-line entries of the form 
+.TP
+.I option: option-value
+.TP
+Descriptions of available options:
+
+.TP
+.I useOR: (on|off)
+Use a different color allocator so a different image drawing method
+(GXor) can be used.  Default is off.
+
+.TP
+.I cookie: (on|off)
+Use cookie-cutter image drawing.  Default is on; off results in odd-looking
+clip areas on 32-bit displays.
+
+.TP
+.I playback: (on|off)
+If on, play back the game as specified by 
+.I recordFile
+(or
+.I /tmp/netrek.record
+by default).  Default is off.
+
+.TP
+.I port: <number>
+What port number to use when connecting to the server.  Default is 
+.I 2592
+(normal for all current servers).
+
+.TP
+.I metaserver: <machine>
+What machine the metaserver is on.  Default is 
+.I metaserver.netrek.org.
+
+.TP
+.I shipBitmapPath: <path>
+Colon-separated path of where to look for bitmaps or pixmaps of ships or
+other images.  Default is 
+.I /home/watts/.paradise/images:/usr/local/share/paradise/images.
+
+.TP
+.I font, boldfont, italicfont, bigfont: <font-specification>
+Specifies what font to use for the above cases.  This is the X11
+font specification of the font.  The defaults are
+.br
+    font: "6x10"
+.br
+    boldfont: "6x10"
+.br
+    italicfont: "6x10"
+.br
+    bigfont: "-adobe-helvetica-bold-r-normal--34-*-*-*-*-*-*-*"
+
+.TP
+.I forcemono: (on|off)
+Force monochrome mode.  Default is off.
+
+.TP
+.I color.(white|black|red|green|yellow|cyan): <color-spec>
+Use a different color for each of the above named colors for bitmaps.  
+For instance, it is difficult to see the Romulan bitmaps with the
+default red color.
+.I color.red: orange
+makes the ships brighter and easier to see.
+
+.TP
+.I metaFork: (on|off)
+Controls whether selecting a server from the metaserver window forks
+a client and leaves the metaserver window up or is replaced by
+the client.  Default is off.
+
+.TP
+.I <window>.<parameter>: value
+Controls a variety of aspects about the windows the client uses.
+.I <window>
+can be one of
+.I netrek, netrek_icon, local, map, tstat, warn, message, planet, planet2, rank, Player, HELP!, review_all, review_team, review_your, review_kill, review_phaser, review, Network Statistics, UDP, network, tools, Motd, FED, ROM, KLI, ORI, quit, stats, NewStats, 
+or 
+.I war.
+.I <parameter>
+can be one of
+.I geometry, parent, cursor, buffered, 
+or 
+.I mapped.
+If
+.I <window>
+is a review window, 
+.I <parameter>
+can also be one of
+.I scrollSaveLines
+or
+.I allow.
+
+.TP
+.I recordGame: (on|off)
+If on, record the game being played into the file specified by
+.I recordFile
+(or 
+.I /tmp/netrek.record
+by default).  Default is off.
+
+.TP
+.I showshields: (on|off)
+Shows shields around ship if on.  Default is on.
+
+.TP
+.I colorFriends: (on|off)
+.TP
+.I colorEnemies: (on|off)
+Use the 
+.I .colored 
+XPMs for friendly or enemy ships if on.  Default is off for friendly ships
+and on for enemy ships.
+
+.TP
+.I showstats
+
+.TP
+.I keeppeace
+
+.TP
+.I reportkills
+
+
+.TP
+.I showstars: (on|off)
+Shows stars in background on local map.  Default is on.
+
+.TP
+.I showMySpeed: (on|off)
+Shows your speed next to your ship on the local map.  Default is on.
+
+.TP
+.I showTractorPressor: (on|off)
+Shows your tractor/pressor beams.  Default is on.
+
+.TP
+.I showAllTractorPressor: (on|off)
+Shows everyone's tractors/pressors.  Default is on for Paradise, off
+for Bronco.
+
+.TP
+.I showLock: (on|off)
+Shows a lock icon over the subject being locked onto.  Default is on.
+
+.TP
+.I showgrid: (on|off)
+Superimposes a dashed sector grid on the galactic.
+
+.TP
+.I namemode
+
+.TP
+.I newDashboard
+
+.TP
+.I newDashboard2
+
+.TP
+.I Dashboard
+
+.TP
+.I soundPath
+
+.TP
+.I cloakchars: <chars>
+Specifies what characters to use for cloaked players on the galactic.
+Default is
+.I ??,
+although
+.I ><
+is sometimes used as well.
+
+.TP
+.I showPhaser
+
+.TP
+.I logging
+
+.TP
+.I logfile
+
+.TP
+.I warnhull
+
+.TP
+.I shellTools
+
+.TP
+.I warpStreaks: (on|off)
+When going into warp, make stars in the background streak by.  Default
+is off.
+
+.TP
+.I useMsgw
+
+.TP
+.I logPhaserMissed
+
+.TP
+.I phaserStats
+
+.TP
+.I jubileePhasers
+
+.TP
+.I enemyPhasers
+
+.TP
+.I showShieldDam
+
+.TP
+.I udpupdates
+
+.TP
+.I updatespersecond
+
+.TP
+.I updatespersec
+
+.TP
+.I extraAlertBorder
+
+.TP
+.I galacticfrequent
+
+.TP
+.I continuousMouse[.L|M|R]
+
+.TP
+.I clickDelay
+
+.TP
+.I autoQuit: <number>
+How long the client will wait (in seconds) before qutting automatically
+at the ship selection screen.
+
+.TP
+.I pigSelf
+
+.TP
+.I infoIcon
+
+.TP
+.I showGalacticSequence
+
+.TP
+.I showLocalSequence
+
+.TP
+.I udpDebug
+
+.TP
+.I udpClientSend
+
+.TP
+.I tryShort
+
+.TP
+.I robsort: (on|off)
+Use alternative method of sorting the player list.  Default is off.
+
+.TP
+.I sortPlayers: (on|off)
+Sort the player list into teams.  Default is on.
+
+.TP
+.I hidenokills: (on|off)
+If on, the client doesn't display 0.00 for people with no kills.  Default
+is on for Paradise, off for Bronco.
+
+.TP
+.I showDead: (on|off)
+
+.TP
+.I showPreLogins: (on|off)
+
+.TP
+.I sortOutfitting: (on|off)
+
+.TP
+.I timertype
+
+.TP
+.I playerList
+
+.TP
+.I resizePlayerList
+
+.TP
+.I packetLights
+
+.TP
+.I viewBox
+
+.TP
+.I sectorNums
+
+.TP
+.I lockLine
+
+.TP
+.I mapSort
+
+.TP
+.I autoSetWar
+
+.TP
+.I keepInfo
+
+.TP
+.I messageWarp
+
+.TP
+.I askforUpdate
+
+.TP
+.I lowercaset
+
+.TP
+.I scrollBeep
+
+.TP
+.I godToAllOnKills
+
+.TP
+.I autoZoom
+
+.TP
+.I autoUnZoom
+
+.TP
+.I autoZoomOverride
+
+.TP
+.I DefLite
+
+.TP
+.I UseLite
+
+.TP
+.I planetCycleTime
+
+.TP
+.I playerCycleTime
+
+.TP
+.I localShipStats
+
+.TP
+.I statString
+
+.TP
+.I statHeight
+
+.TP
+.I localStatsX
+
+.TP
+.I localStatsY
+
+.TP
+.I showIND
+
+.TP
+.I galacticHockeyLines
+
+.TP
+.I tacticalHockeyLines
+
+.TP
+.I cleanHockeyGalactic
+
+.TP
+.I teamColorHockeyLines
+
+.TP
+.I puckBitmap
+
+.TP
+.I puckArrow
+
+.TP
+.I puckArrowSize
+
+.TP
+.I plotter
+
+.TP
+.I redrawDelay
+
+.TP
+.I showgalactic
+
+.TP
+.I showLocal
+
+.TP
+.I planetChill
+
+.TP
+.I preload
+
+.TP
+.I HUDWarning
+
+.TP
+.I showNewStats
+
+.TP
+.I scrollSaveLines: <number>
+How many scrollback lines are available in the message windows.  Default
+is 500.
+
+.TP
+.I useExternalImages (on|off)
+Whether to use external bitmaps or pixmaps in favor of the built-in
+images or not.  Default is on.
+
+.TP
+.I name: <string>
+The default login name that will be used if you hit Enter at the
+initial login prompt.
+
+.TP
+.I password: <string>
+The default login password that will be used at the initial login prompt.
+Specifying both name and password will bypass the initial login prompt
+completely.
+
+.TP
+.I defaultShip: <two-letter abbr.>
+The default ship that will be selected for you when you click the
+team logo with the mouse.  Sample values are SC, DD, CA, BB, AS, SB, JS,
+WB, FL, CL, CV, PT, UT (the availability of these ships or others is
+determined by the server).  The default is CA.
+
+.TP
+.I netStats: (on|off)
+Whether to keep and print out network transfer statistics or not.  Default
+is on.
+
+.SH FILES
+paradise                The executable
+.br
+~/.xtrekrc,             Defaults file for paradise
+.br
+~/.paradiserc

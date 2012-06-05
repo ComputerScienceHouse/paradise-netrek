@@ -1,0 +1,67 @@
+Full-color Paradise-Netrek client images README
+-----------------------------------------------
+
+The pixmaps in this directory are for the Paradise full-color client.
+By default, the client looks for these in ~/.paradise/images or in
+${datadir}/paradise/images (datadir is usually /usr/share or /usr/local/share).
+If you install them anywhere else, add an entry to your .xtrekrc or
+.paradiserc:
+
+shipBitmapPath: (full path to bitmap directory here)
+
+This client requires at least an 8-bit color display.  Then again,
+who doesn't have a 32-bit color display in this day & age... ;)
+This client also requires reasonable horsepower.  Running in bitmap
+mode really impacts display update performance.  Running in pixmap mode 
+(for some reason) requires somewhat less; double buffering in pixmap
+mode requires about 30% more.
+
+Other notes -->
+
+     * TURN LOCAL BUFFERING OFF, unless you have a FAST machine and X server.
+
+     * Pixmap sets for both Bronco & Paradise are included.  For Bronco,
+       the .bronco.colored set is used for enemies, and the .bronco set
+       is used for friendly players.  Likewise, for Paradise, the .colored
+       set is used for enemies, and the normal pixmaps are used for
+       friendly players.
+
+       In addition, the Rom DD, CA, and BB also have painted versions (none
+       exist for the SC and AS).  High ranking or prestigious Romulan
+       Commanders often had painted vessels, and, as a rule of thumb, such
+       Commanders only flew powerful vessels like CAs and BBs.  The DD is
+       painted because it's a commonly used vessel, and it makes telling Rom
+       and Klingon DDs apart much easier.  The AS and SC are pretty distinct,
+       and didn't need to appear painted, IMO.  You can pick and choose which
+       vessels you want painted and which ones you don't by merely renaming
+       some files in the Rom subdirectory.  The ones WITHOUT the
+       ".painted" extensions are the ones being used by the client.
+
+     * There are green and orange torp pixmaps, blue and orange plasma
+       pixmaps, accompanying explosions, and a NEW SHIP EXPLOSION.
+       The explosion is "explosion2.xpm"; rename it to use it.
+
+New .xtrekrc/.paradiserc options:
+
+xpm: on/off
+local.buffered: on/off
+showLocal: R-F-S-T/r-f-s-t (example "showLocal: Rt" will give you
+                            (R)esource planets with (t)eam overlays)
+showGalactic: R-F-S-T (example "showGalactic: F" will give you
+                        (F)acility planets)
+preload: on/off
+
+Credits:
+
+PIXMAP CODE AND ASSORTED CLIENT MODS
+Bill Dyess (current beta code)
+Rob Forsman (original alpha code)
+
+ARTWORK
+Brandon Gillespie
+Mike McGrath
+Joe Rumsey
+Ola Andersson
+
+SOUND SUPPORT:
+Sujal Patel

@@ -1,0 +1,387 @@
+#!/home/util00/ugrad/glamm/bin/perl
+#
+# creates images.c and images.h.  Takes the imagedir as a parameter.
+#
+# Bill Dyess, 10/5/94
+#
+# Bill Dyess, 2/11/95
+#  - Now always compiles in default.x[pb]m.
+#  - Compiles in all image files if -c given as a parameter.
+#
+require "find.pl";
+
+$path = $ARGV[0];
+if ($path eq "-c") {
+  $compile_in = 1;
+  $path = $ARGV[1];
+} else {
+  $compile_in = 0;
+}
+
+die "Usage: $0 [-c] <imagedir>\n  -c    Compile in all images.\n" unless $path;
+
+$origdir = $ENV{'PWD'};
+
+&find($path);
+
+&init_lookup();
+
+open(C,">images.c") || die "can't open images.c: $!";
+open(H,">images.h") || die "can't open images.h: $!";
+open(SCRIPT_IN,"$0") || die "can't open $0: $!";
+open(SCRIPT_OUT,">$0.out") || die "can't open $0.out: $!";
+while(<SCRIPT_IN>) { 
+  print SCRIPT_OUT; 
+  last if /^  %lookup = \(/; 
+}
+close(SCRIPT_IN);
+
+$help = "/* {width,height,frames,xpm,filename,loaded,alternate,bad,compiled_in,xbmdata,xpmdata,pixmap,clipmask} */\n";
+
+print C <<EOF;
+/* images.c.  Contains the image control data. [BDyess] */
+/* automatically created by scripts/mkimgsrc */
+
+#include <stdlib.h>
+#include "config.h"
+#include "Wlib.h"
+#include "images.h"
+#include "struct.h"
+#include "proto.h"
+
+/* convert between ship number to image offset.  For example, to get the
+   image for a scout, use: imagearray[shipoffset[SCOUT]+I_<team>_AS];
+   [BDyess] */
+static int shipImageOffset[] = { 
+  I_FED_SC - I_FED_AS,
+  I_FED_DD - I_FED_AS,
+  I_FED_CA - I_FED_AS,
+  I_FED_BB - I_FED_AS,
+  I_FED_AS - I_FED_AS,
+  I_FED_SB - I_FED_AS,
+  I_FED_AT - I_FED_AS,
+  I_FED_JS - I_FED_AS,
+  I_FED_FR - I_FED_AS,
+  I_FED_WB - I_FED_AS,
+  I_FED_CL - I_FED_AS,
+  I_FED_CV - I_FED_AS,
+  I_FED_UT - I_FED_AS,
+  I_FED_PT - I_FED_AS,
+  I_FED_PU - I_FED_AS,
+};
+
+static int teamImageOffset[] = {
+  I_IND_AS,
+  I_FED_AS,
+  I_ROM_AS,
+  I_KLI_AS,
+  I_ORI_AS,
+  I_IND_AS,
+};
+
+/* compiled in images in alphabetical order, XBM before XPM. [BDyess] */
+EOF
+
+# sort the filelist
+@filelist = sort keys %table;
+
+# copy in all the xbm and xpm data if $compile_in is set, otherwise just
+# the data for the default image.
+#chdir($path) || die "can't chdir() to $path: $!";
+if($compile_in) {
+  for $file (@filelist) {
+    &include_bitmap($file);
+    &include_pixmap($file);
+  }
+} else {
+  &include_bitmap("/default");
+}
+
+# includes the given bitmap in the C source.
+sub include_bitmap {
+  local($file) = @_;
+  $ok = 0;
+  if(open(IN,"$path$file.xbm")) {
+    while(<IN>) {
+      if (/^#define\s*\S*_width\s*(\d*)/) {
+	$lookup{"${file}_width"} = $1;
+	next;
+      }
+      if (/^#define\s*\S*_height\s*(\d*)/) {
+	$lookup{"${file}_height"} = $1;
+	next;
+      }
+      if (/^static.*char\s\S*_bits\[\]/) {
+        $name = $file;
+	$name =~ s,^/,,;
+	$name =~ s,[/.],_,g;
+        print C "static unsigned char ${name}_bits[] = {\n";
+	$lookup{"${file}_xbmdata"} = "${name}_bits";
+	$ok = 1;
+	next;
+      }
+      print C;
+    }
+    print C "\n";
+    if($ok) {
+      $lookup{"${file}_compiled_in"} = 1;
+    } else {
+      print STDERR "Error parsing $file.xbm!\n";
+    }
+  }
+}
+
+# includes the given pixmap in the C source.
+sub include_pixmap {
+  local($file) = @_;
+  $ok = 0;
+  if(open(IN,"$path$file.xpm")) {
+    while(<IN>) {
+      if (/static.*char[\s\*]*\S*\[\]/) {
+        $name = $file;
+	$name =~ s,^/,,;
+	$name =~ s,[/.],_,g;
+	s/static char/static unsigned char/;
+	s/\*\s*\S*\[\]/* ${name}_xpm\[\]/;
+        print C;
+	$lookup{"${file}_xpmdata"} = "${name}_xpm";
+        $ok = 1;
+      } else {
+	print C;
+      }
+    }
+    print C "\n";
+    if($ok) {
+      $lookup{"${file}_compiled_in"} = 1;
+    } else {
+      print STDERR "Error parsing $file.xpm!\n";
+    }
+  }
+}
+
+# start of imagearray
+#$height = $lookup{"/default_height"};
+#$width = $lookup{"/default_width"};
+print C <<EOF;
+/* keep sorted (for bsearch) [BDyess] */
+static W_Image imagearray[] = {
+EOF
+#   {$height, $width, 1, 0, "/default", 1, I_DEFAULT, 0, 1, default_bits, default_xpm, 0, 0},
+
+
+print H <<EOF;
+/* images.h.  Contains the #defines and extern's for all the image management
+   data [BDyess] */
+/* automatically created by scripts/mkimgsrc */
+
+#include "Wlib.h"
+
+extern W_Image imagearray[];
+extern int shipImageOffset[];
+extern int teamImageOffset[];
+W_Image * getImage P((int offset));
+W_Image * getShipImage P((int team, int ship));
+void loadImageByFilename P((char *filename));
+void loadAllImages P((void));
+
+EOF
+##define I_DEFAULT              0
+
+$counter = 0; #1;
+for $file (@filelist) {
+  &print_lookup($file);
+  print C $help if ($counter % 25) == 0;
+  $frames = $lookup{"${file}_frames"};
+  $frames = 0 unless $frames;
+  $alternate = $lookup{"${file}_alternate"};
+  $alternate = "I_DEFAULT" unless $alternate;
+  $width = $lookup{"${file}_width"};
+  $width = 0 unless $width;
+  $height = $lookup{"${file}_height"};
+  $height = 0 unless $height;
+  $is_compiled_in = $lookup{"${file}_compiled_in"};
+  $is_compiled_in = 0 unless $is_compiled_in;
+  $xbmdata = $lookup{"${file}_xbmdata"};
+  $xbmdata = "NULL" unless $xbmdata;
+  $xpmdata = $lookup{"${file}_xpmdata"};
+  if($xpmdata) {
+    $xpmdata = "(char**)$xpmdata";
+  } else {
+    $xpmdata = "NULL" unless $xpmdata;
+  }
+  print C <<EOF;
+   {$width, $height, $frames, 0, "$file", 0, $alternate, 0, $is_compiled_in, $xbmdata, $xpmdata, 0, 0}, /* $counter */
+EOF
+  $file =~ s,^/,,;
+  $file =~ s,[./],_,g;
+  $file = "\U$file";
+  $file =~ s/^(WEAPONS|PLANETS|INTRO)_//;
+  printf(H "#define I_%-20s $counter\n",$file);
+  $idiotcheck{$file} = $counter;
+  $counter++;
+}
+
+$counter--;
+printf(H "#define I_%-20s $counter\n",LAST);
+
+@idiotchecklist = (
+  "I_F_1111 - I_F_0000 == 15",
+  "I_F_M1111 - I_F_M0000 == 15",
+  "I_F_OVERLAY_1111 - I_F_OVERLAY_0000 == 15",
+  "I_F_OVERLAY_M1111 - I_F_OVERLAY_M0000 == 15",
+  "I_R_111 - I_R_000 == 7",
+  "I_R_M111 - I_R_M000 == 7",
+  "I_R_OVERLAY_111 - I_R_OVERLAY_000 == 7",
+  "I_R_OVERLAY_M111 - I_R_OVERLAY_M000 == 7",
+  "I_A_4 - I_A_0 == 4",
+  "I_A_M4 - I_A_M0 == 4",
+  "I_A_OVERLAY_4 - I_A_OVERLAY_0 == 4",
+  "I_A_OVERLAY_M4 - I_A_OVERLAY_M0 == 4",
+);
+
+# do the idiot check
+$error = 0;
+for $check (@idiotchecklist) {
+  $orig = $check;
+  while($check =~ /I_(\S*)/) {
+    if ($idiotcheck{$1} eq "") {
+      print "ERROR: I_$1 must exist!\n";
+      $error = 1;
+      $idiotcheck{$1} = 0;
+    }
+    $check =~ s/I_(\S*)/$idiotcheck{$1}/;
+  }
+  eval <<EOF;
+print "ERROR: \\"$orig\\" must be true!\n",\$error=1 unless ($check);
+EOF
+}
+exit -1 if $error;
+
+print C <<EOF;
+};
+
+W_Image *
+getImage(offset)
+  int offset;
+{
+  W_Image * image = &imagearray[offset];
+  if(!image->loaded) {
+    W_LoadImage(image);
+  }
+  return image;
+}
+
+W_Image *
+getShipImage(team,ship)
+  int team,ship;
+{
+  return getImage(teamImageOffset[team] + shipImageOffset[ship]);
+}
+
+#ifndef __STDC__
+#define const
+#endif /*__STDC__*/
+
+int cmpfilenames(left,right)
+  const void *left, *right;
+{
+  return strcmp((char*)left,((W_Image*)right)->filename);
+}
+
+void
+loadImageByFilename(filename)
+  char *filename;
+{
+  W_Image *image;
+
+  image = bsearch(filename, imagearray, sizeof(imagearray) / sizeof(W_Image),
+                  sizeof(W_Image), cmpfilenames);
+  if(image && !image->loaded) W_LoadImage(image);
+}
+
+void
+loadAllImages()
+{
+  int i;
+  for(i=I_DEFAULT; i<I_LAST; i++) 
+    if(!imagearray[i].loaded) 
+      W_LoadImage(&imagearray[i]);
+}
+EOF
+
+
+close C;
+close H;
+
+print SCRIPT_OUT ");\n}\n";
+close SCRIPT_OUT;
+unlink("$0.bak");
+rename("$0","$0.bak") || print STDERR "Error renaming $0 to $0.bak: $!";
+rename("$0.out","$0") || print STDERR "Error renaming $0.out to $0: $!";
+chmod 0755, "$0";
+
+sub wanted {
+  return unless /\.x[bp]m$/;
+  $x = $name;
+  $x =~ s/^$path//;
+  $x =~ s/\.x[bp]m$//;
+  return unless -f "$_";
+  $table{$x} = 1;
+}
+
+sub print_lookup {
+  local($name) = @_;
+  local($alternate,$frames);
+  print SCRIPT_OUT ",\n" if $notfirst;
+  $notfirst = 1;
+  $alternate = $lookup{"${name}_alternate"};
+  $alternate = 'I_DEFAULT' unless $alternate;
+  $frames = $lookup{"${name}_frames"};
+  printf(SCRIPT_OUT "%-40s \'$alternate\'","'${file}_alternate',");
+  printf(SCRIPT_OUT ",\n%-40s '$frames'","'${file}_frames',") if $frames;
+}
+
+# lookup is a table to lookup values that are different than 0 or filename.
+# <path>_frames and <path>_alternate are searched for and used.
+#
+# lookup is generated automatically when mkimgsrc is run and saved to this
+# file.  If it's a new image, I_DEFAULT is used.
+sub init_lookup {
+  %lookup = (
+'/Fed.bronco.colored/AS_alternate',      'I_DEFAULT',
+'/Fed.bronco.colored/AT_alternate',      'I_DEFAULT',
+'/Fed.bronco.colored/BB_alternate',      'I_DEFAULT',
+'/Fed.bronco.colored/CA_alternate',      'I_DEFAULT',
+'/Fed.bronco.colored/DD_alternate',      'I_DEFAULT',
+'/Fed.bronco.colored/SB_alternate',      'I_DEFAULT',
+'/Fed.bronco.colored/SC_alternate',      'I_DEFAULT',
+'/Fed.bronco/AS_alternate',              'I_DEFAULT',
+'/Fed.bronco/AT_alternate',              'I_DEFAULT',
+'/Fed.bronco/BB_alternate',              'I_DEFAULT',
+'/Fed.bronco/CA_alternate',              'I_DEFAULT',
+'/Fed.bronco/DD_alternate',              'I_DEFAULT',
+'/Fed.bronco/SB_alternate',              'I_DEFAULT',
+'/Fed.bronco/SC_alternate',              'I_DEFAULT',
+'/Fed.colored/AS_alternate',             'I_DEFAULT',
+'/Fed.colored/AT_alternate',             'I_DEFAULT',
+'/Fed.colored/BB_alternate',             'I_DEFAULT',
+'/Fed.colored/CA_alternate',             'I_DEFAULT',
+'/Fed.colored/CL_alternate',             'I_DEFAULT',
+'/Fed.colored/CV_alternate',             'I_DEFAULT',
+'/Fed.colored/DD_alternate',             'I_DEFAULT',
+'/Fed.colored/FR_alternate',             'I_DEFAULT',
+'/Fed.colored/JS_alternate',             'I_DEFAULT',
+'/Fed.colored/PT_alternate',             'I_DEFAULT',
+'/Fed.colored/PU_alternate',             'I_DEFAULT',
+'/Fed.colored/SB_alternate',             'I_DEFAULT',
+'/Fed.colored/SC_alternate',             'I_DEFAULT',
+'/Fed.colored/UT_alternate',             'I_DEFAULT',
+'/Fed.colored/WB_alternate',             'I_DEFAULT',
+'/Fed/AS_alternate',                     'I_FED_CA',
+'/Fed/AT_alternate',                     'I_IND_AT',
+'/Fed/BB_alternate',                     'I_FED_CA',
+'/Fed/CA_alternate',                     'I_DEFAULT',
+'/Fed/CL_alternate',                     'I_FED_CA',
+'/Fed/CV_alternate',                     'I_FED_CA',
+'/Fed/DD_alternate',                     'I_FED_CA',
+'/F

@@ -1,0 +1,374 @@
+# $Id: sample.paradiserc,v 1.1 2007/08/27 21:30:19 watts Exp $
+# Sample .paradiserc file
+
+## Default name
+name:			Crusty Old Feldegast
+
+## Default ship when you click the team logo with the mouse.
+## Values: SC, DD, CA, BB, AS, SB, JS, WB, FL, CL, CV, PT, UT
+defaultShip:	CA
+
+## Use RSA client authentication if possible.
+useRSA:		on
+
+## Show shields
+showShields:		on
+
+## Show stats window
+showStats:		off
+
+## Keep peace
+keepPeace:		on
+
+## Report kills
+reportKills:		on
+
+## Show army count on local window
+showarmiesonlocal:	off
+
+## Show background stars
+showstars:		on
+
+## Show my speed on local window
+showMySpeed:		on
+
+## Vary color of shields with damage
+varyShields:		on
+
+## Show tractor/pressors on local window
+showTractor:		on
+showTractorPressor:	on
+
+## Show tractor/pressor of everyone in tactical
+showAllTractorPressor:	on
+
+## Show Planet names
+showPlanetNames:	on
+showPlanetOwner:	off
+
+## Show lock
+## 0=don't show, 1=galactic only, 2=tactical only, 3=both
+showLock:		3
+
+## Collect network statistics
+netStats:		on
+
+## Show sector grids in galactic
+showgrid:		on
+
+## Enable name mode
+namemode:		on
+
+## Use new dashboard
+newDashboard:		on
+
+## Use newer dashboard
+newDashboard2:		on
+
+## Dashboard type
+## 0=old dashboard, 1=new dashboard, 2=color dashboard, 3=rainbow dashboard
+Dashboard:		3
+
+## Clear my keymap each time (i.e. ignore the server's copy)
+clearMap:		on
+
+## Path to the sound files
+soundPath:		/usr/local/TedTurner/sounds/
+
+## Cloak chars in galactic
+cloakChars:		XX
+
+## Show phasers
+showPhaser:		INT
+
+## Enable logging, log file
+logging:		on
+logFile:		/tmp/TT.log
+
+## Log messages
+logMessage:		on
+
+## Show hull status as dots around ship
+warnHull:		on
+
+## Enable shell window
+shellTools:		on
+
+## Show warp streaks
+warpStreaks:		on
+
+warp:			on
+
+## Use message window
+useMsgw:		on
+
+## Log missed phasers
+logPhaserMissed:	on
+
+## Keep phaser statistics
+phaserStats:		on
+
+## Jubilee (rotating color) phasers when hit
+jubileePhasers:		on
+
+## Enemy phasers
+enemyPhasers:		INT
+
+## Show shield damage on tactical
+showShieldDam:		on
+
+## Updates per second
+updatespersecond:	INT
+
+updateSpeed:		0
+
+## Extra borders around window
+extraAlertBorder:	on
+
+## Frequently update galactic window
+galacticFrequent:	on
+
+## Enable continuous mouse, click delay
+continuousMouse.L:	off
+continuousMouse.M:	off
+continuousMouse.R:	off
+continuousMouse:	off
+clickDelay:		INT
+
+## Set autoquit timer
+autoQuit:		999
+
+## Pig self?
+pigSelf:		on
+
+## Show # of players in team + messages in icon when minimized
+infoIcon:		on
+
+## Galactic and local window sequence
+showGalacticSequence:	012345
+showLocalSequence:	01234
+
+## Try UDP mode
+tryUDP:			off
+
+## Send, receive using UDP
+## 0=TCP only, 1=simple UDP, 2=fat UDP, 3=double UDP
+UDPClientSend:		3
+UDPClientReceive:	2
+
+## Enable UDP sequence checking
+UDPSequenceCheck:	on
+
+## enable UDP debugging
+## 0=off, 1=on (connect messages only), 2=on (verbose)
+UDPDebug:		0
+
+## Try short packets
+tryShort:		on
+
+WaitMotd.mapped:	on
+
+## Put enemy on left with sorted playerlist
+robsort:		off
+
+## Sort players
+sortPlayers:		on
+
+## Hide 0 kill players on the player list with "    "
+hideNoKills:		on
+
+## Show dead players on player list
+showDead:		on
+
+## Show players logging in on player list
+showPreLogins:		on
+
+## Sort outfitting ships to the bottom of the list
+sortOutfitting:		on
+
+## Timer type
+## 0=none, 1=time of day, 2=time on server, 3=time in ship, 4=user set time
+timerType:		3
+
+## Player list format
+playerList:		,nTRNKWLr O D d,nTR N  K lrSd
+
+## Resize player list
+resizePlayerList:	on
+
+## Show blinking lights on console for packets
+packetLights:		on
+
+## Show box on galactic representing tactical window boundaries
+viewBox:		on
+
+## Print sector numbers in galactic
+sectorNums:		on
+
+## Show lock line from your ship to target of lock
+lockLine:		on
+
+## New sorting for planet list
+mapSort:		on
+
+## Automatically set war in tourney mode
+autoSetWar:		1
+
+keepInfo:		INT
+
+## Allow messaging during warp
+messageWarp:		on
+
+## Report number of dropped UDP packets
+reportDroppedPackets:	on
+
+## Send request for full update ('=') each time you enter
+askForUpdate:		on
+
+## Allow use of mt to message the team
+lowercaseT:		on
+
+## Beep when you try to scroll too far
+## Also in scrolling windows: ^p scrolls one line back, ^n one line forward,
+## left button one page pack, right button page forward, middle button to end,
+## ^e clears the window(but not the scrollback)
+scrollBeep:		off
+
+## In short packets mode, remove "GOD->ALL" from the beginning of kill msgs
+godToAllOnKills:	off
+
+
+autoZoom:		on
+autoUnZoom:		on
+autoZoomOverride:	on
+
+DefLite:		on
+UseLite:		on
+planetCycleTime:	INT
+playerCycleTime:	INT
+showMapAtMotd:		on
+
+##some very silly stuff to draw ship status on local window.
+## Either needs work, or needs to be tossed ;)
+##(part of an effort to get rid of the dashboard on my small display)
+##stats that can be shown:
+##'D'amage, 'S'hields, 'F'uel, 'A'rmies, s'P'eed, 'W'temp, 'E'temp
+##a lower case letter reverses the line for that stat.
+
+statString:		DSEWF
+localShipStats:		on
+localStatsX:		25
+localStatsY:		450
+statHeight:		80
+
+## Draw an X over independent planets
+showInd:		on
+
+#### Hockey
+
+## Draw lines on the galactic, tactical
+galacticHockeyLines:	true
+tacticalHockeyLines:	true
+
+## Don't draw planets on the galactic when playing hockey
+cleanHockeyGalactic:	false
+
+## Color hockey lines by team
+teamColorHockeyLines:	true
+
+## Use the hockey puck bitmap
+puckBitmap:		on
+
+## Draw directional arrow on puck, size of arrow
+puckArrow:		true
+puckArrowSize:		3
+
+####
+
+## Minimum of x/10's of a second between redraws
+redrawDelay:		0
+
+showgalactic:		RFSTArfsta,
+showgalactic:		F,T,A
+showlocal:		RFSTArfsta,
+showlocal:		Sf,Sft,Rft
+
+## Planet rotation slowdown factor (higher is slower)
+planetChill:		2
+
+## Display warnings on local window
+HUDWarning:		on
+
+## Show new stats window
+showNewStats:		on
+
+## Default number of scrollback lines
+scrollSaveLines:	500
+
+## Draw rounded asteroid belt
+rounded_asteroids:	on
+
+## Galactic map plotting line
+plotter:		on
+
+#### Game recording and playback
+recordGame:		off
+recordFile:		/tmp/TT.prec
+maxRecord:		100000000
+playback:		off
+playFile:		/tmp/TT.prec
+
+
+#### Metaserver
+
+## Metaserver address
+metaserver:		metaserver.netrek.org
+
+## Fork the metaserver window into the background
+metaFork:		false
+
+
+#### XPM defaults
+
+## Use XPM's for full color
+xpm:			off
+
+## Ship bitmap path
+shipBitmapPath:		/usr/local/Tedturner/images
+
+## Path prefix to find XPMs
+xpmPath:		/usr/local/TedTurner/images
+
+## Directory containing image files
+imagedir:		/usr/local/TedTurner/images
+
+## Verbose image loading
+verbose_image_loading:	on
+
+## Preload images
+preload:		ALL
+
+## Use external images in preference to compiled in images
+useExternalImages:	off
+
+## Enable double buffering in local window
+local.buffered:		on
+
+## Cookie clipping mode
+cookie:			on
+
+## Turn on color allocator to use GXor for drawing images
+useOR:			off
+
+
+####  Changes to the basic colors
+#color.white:		white
+#color.black:		black
+#color.red:		paleVioletRed1
+#color.green:		green
+#color.yellow:		yellow
+#color.cyan:		cyan
+#color.cyan:		dodgerblue
+#color.cyan:		DeepSkyBlue
+#color.light grey:	light grey
+

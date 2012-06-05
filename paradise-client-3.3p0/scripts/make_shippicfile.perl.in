@@ -1,0 +1,100 @@
+#! @PERL@
+
+# Copyright (C) 1993 Robert Forsman
+# GNU General Public License
+
+#
+# This script is intended to generate ship shape picture albums for the
+# paradise netrek client.
+#
+# You can either provide (as X bitmaps) the first 4 rotations or all 16
+# rotations.  If you only provide 4 then the pnmflip program must be in
+# your path to construct the other 12.
+# The first 4 rotations are (for nautical dudes) N, NNE, NE, ENE.
+#
+# The output from this script should be placed in the directory specified
+# by the .xtrekrc shipBitmapPath resource which defaults to
+# /usr/games/lib/netrek.  The file name should be R%d.C%d where the first
+# integer is the race number and the second is the ship class number.
+#
+# common race numbers
+#   Federation	0
+#   Romulan	1
+#   Klingon	2
+#   Orion	3
+#
+# paradise ship class numbers
+#   Scout	0	: Standard
+#   Destroyer	1
+#   Cruiser	2
+#   Battleship	3
+#   Assault	4
+#   Starbase	5
+#   DeathStar	6
+#   Jumpship	7	: Paradise
+#   Frigate	8
+#   warbase	9
+#   Light CA	10	: Eden
+#   Carrier	11
+
+sub revbits {
+	local($_) = @_;
+	local(@_) = split(//, $_);
+	foreach $_ (@_) {
+		$_ = pack("B*", unpack("b*", $_));
+	}
+	return join("", @_);
+}
+
+if (@ARGV != 4 && @ARGV != 16) {
+	print STDERR "Usage:\nthis program requires 4 or 16 xbm files as command line arguments\n";
+	exit(1);
+}
+
+$/ = -1;
+
+$tempfile = "/tmp/mspf$$";
+
+for ($i=0; $i<@ARGV; $i++) {
+	open(FILE, "<".$ARGV[$i]) || die;
+	$_ = <FILE>;
+	close(FILE);
+
+	/width *(\d+)/ || die "format error in";
+	$width = $1;
+	/height *(\d+)/ || die "format error in";
+	$height = $1;
+
+	while (s/(0x[0-9a-f]*)//) {
+		$data[$i] .= sprintf( "%c", oct($1));
+	}
+
+	if (@ARGV==4) {
+	open(TEMP, ">$tempfile") || die;
+	printf TEMP "P4\n%d %d\n%s", $width, $height, &revbits($data[$i]);
+	close(TEMP);
+
+	open(PIPE, "pnmflip -cw $tempfile|");
+	$_ = <PIPE>;
+	close(PIPE);
+	/^P4\s*(\d+)\s*(\d+)\n?/ || die "format error from pnmflip in";
+	$data[$i+4] = &revbits($');
+
+	open(PIPE, "pnmflip -r180 $tempfile|");
+	$_ = <PIPE>;
+	close(PIPE);
+	/^P4\s*(\d+)\s*(\d+)\n?/ || die "format error from pnmflip in";
+	$data[$i+8] = &revbits($');
+
+	open(PIPE, "pnmflip -ccw $tempfile|");
+	$_ = <PIPE>;
+	close(PIPE);
+	/^P4\s*(\d+)\s*(\d+)\s?/ || die "format error from pnmflip in";
+	$data[$i+12] = &revbits($');
+	}
+}
+
+
+print pack("NNN", 16, $width, $height), join("", @data);
+
+#unlink $tempfile;

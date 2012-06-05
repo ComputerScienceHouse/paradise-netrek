@@ -1,0 +1,399 @@
+# Netrek Paradise III: Chaos of War
+#
+# Permission to use, copy, modify, and distribute this software and its
+# documentation for any NON-COMMERCIAL purpose (following the terms of
+# the GNU General Public License (read the file 'COPYING')) and without 
+# fee is hereby granted, provided that this copyright notice appear in all 
+# copies.  No representations are made about the suitability of this 
+# software for any purpose.  This software is provided "as is" without 
+# express or implied warranty.
+# 
+#    Xtrek Copyright 1986                            Chris Guthrie
+#    Netrek (Xtrek II) Copyright 1989                Kevin P. Smith
+#                                                    Scott Silvey
+#    Paradise (Netrek II) Copyright 1993             Larry Denys
+#                                                    Kurt Olsen
+#                                                    Brandon Gillespie
+#                                                    Rob Forsman
+#
+#    Comprehensive Credits available in the file docs/CREDITS
+#
+# Programmers: Modify the file 'Makefile.in' not the Makefile directly.
+#
+
+MAKE = make
+INSTMODE = 700
+
+SRVDIR = .
+BINDIR = ../bin
+ETCDIR = ../etc
+LOGDIR = ../logs
+RSADIR = rsa
+
+CPU=@CPU@
+VENDOR=@VENDOR@
+SYS=@SYS@
+HOSTNAME=@HOSTNAME@
+RANLIB=@RANLIB@
+LINT=@LINT@
+YACC=@YACC@
+VERSION=@VERSION@
+#CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@
+CXXFLAGS=@CXXFLAGS@
+DEFS=@DEFS@
+LDFLAGS=@LDFLAGS@
+LIBS=@LIBS@
+
+CCOPTIONS=@CCOPTIONS@
+#CDEBUGFLAGS=@CDEBUGFLAGS@
+CC=@CC@
+
+### An override
+# GCCWARNINGS = 
+# GCCOPTWARNINGS= -O -Wuninitialized -Wunused
+# GCCWARNINGS = ${GCCOPTWARNINGS} -Wreturn-type -Wswitch -Wtrigraphs \
+#	-Wformat -Wchar-subscripts -Wparentheses
+# CC = gcc ${GCCWARNINGS}
+
+# Use this for the KSR1 supercomputer
+# CC = cc -port_def_long -port_lowaddrs
+
+####################
+# RSA authorization stuff
+
+AUTHORIZE=@AUTHORIZE@
+RSA_O=@RSA_O@
+
+#####################
+# GNU Zip libs
+LIBGZ=@LIBGZ@
+
+####################
+#accumulation of all C flags.
+
+CFLAGS = -Iinclude $(CCOPTIONS) $(AUTHORIZE)
+
+##############################################################################
+
+COMMON = data.o shmem.o plutil.o path.o grid.o cutil.o sintab.o imath.o
+
+ME_COMMON = util.o
+
+TOOL_COMMON = shmem.o path.o data.o
+
+NTSERV_OBJS = ${COMMON} cluecheck.o message.o death.o detonate.o \
+	enter.o fatudp.o findslot.o gameconf.o getentry.o getname.o \
+        getship.o input.o interface.o main.o missile.o orbit.o packets.o \
+	parsexbm.o phaser.o ping.o plasma.o redraw.o ${RSA_O} socket.o \
+	sockio.o smessage.o timecheck.o torp.o ${ME_COMMON} warning.o \
+	feature.o
+
+DAEMON_OBJS = daemonII.o dutil.o ${COMMON} conquer.o shipvals.o structdesc.o \
+	sysdefaults.o weapons.o planets.o pl_gen0.o pl_gen1.o \
+	pl_gen2.o pl_gen3.o pl_gen4.o pl_gen5.o pl_gen6.o pl_gen7.o pl_gen8.o \
+        player.o stats.o misc.o tourny.o terrain.o
+
+ROBOT_OBJS = ${COMMON} detonate.o enter.o getship.o interface.o orbit.o \
+	phaser.o robotII.o rmove.o torp.o ${ME_COMMON}
+
+SNAKE_OBJS = data.o path.o shmem.o cutil.o snake.o sintab.o snakemove.o \
+	${ME_COMMON} imath.o
+
+LISTEN_OBJS = data.o path.o listen.o
+
+TOOL_MES_OBJS = tool-mes.o tool-util.o ${TOOL_COMMON}
+
+TOOL_XTK_OBJS = tool-xtk.o tool-util.o ${TOOL_COMMON} getship.o # grid.o \
+#	plutil.o
+
+TOOL_WM_OBJS = tool-wm.o tool-util.o ${TOOL_COMMON}
+
+TOOL_RESET_OBJS = tool-reset.o ${TOOL_COMMON}
+
+TOOL_PL_OBJS = tool-pl.o tool-util.o ${TOOL_COMMON}
+
+TOOL_PROMO_OBJS = tool-promo.o data.o
+
+TOOL_HR_OBJS = tool-hr.o ${TOOL_COMMON}
+
+TOOL_HS_OBJS = tool-hs.o ${TOOL_COMMON}
+
+TOOL_HERALDRY_OBJS = tool-heraldry.o data.o
+
+TOOL_DS_OBJS = tool-ds.o shmem.o path.o structdesc.o data.o
+
+TOOL_TRIM_OBJS = tool-trim.o ${TOOL_COMMON}
+
+R_FILES = data.c death.c detonate.c enter.c findslot.c getentry.c getname.c \
+	getship.c input.c interface.c main.c orbit.c phaser.c plasma.c \
+	redraw.c reserved.c sintab.c socket.c smessage.c timecheck.c torp.c \
+	util.c path.c
+
+SRC = $(R_FILES) data.h defs.h planets.h struct.h packets.h
+
+DAEMON_SRCS=`echo ${DAEMON_OBJS} | sed -e 's/\.o/.c/g'`
+
+NTSERV_SRCS=`echo ${NTSERV_OBJS} | sed -e 's/\.o/.c/g'`
+
+ROBOT_SRCS=`echo ${ROBOT_OBJS} | sed -e 's/\.o/.c/g'`
+
+ALL_SRCS=$(DAEMON_SRCS) $(NTSERV_SRCS) $(ROBOT_SRCS)
+
+INSTALL_EXES=$(BINDIR)/daemonII $(BINDIR)/ntserv $(BINDIR)/listen \
+             $(BINDIR)/robotII $(BINDIR)/snake
+INSTALL_TOOLS_EXES=$(BINDIR)/mes $(BINDIR)/wm $(BINDIR)/reset $(BINDIR)/pl \
+	$(BINDIR)/promo $(BINDIR)/hr $(BINDIR)/hs $(BINDIR)/ds # $(BINDIR)/xtk
+
+##############################################################################
+
+SERVER = $(LIBGZ) ntserv daemonII listen
+
+ROBOTS = robotII snake
+
+TOOLS = mes wm hr hs
+OTHERTOOLS = reset pl promo ds xtk heraldry trim
+
+default:
+	@echo "** Use 'make rules' for a list of make rules **"
+	${MAKE} server
+
+depend:
+	makedepend -- $(CFLAGS) -- $(ALL_SRCS) 
+
+
+rules:
+	@echo "*** Use any of the following ***"; \
+        echo "  General:"; \
+        echo "    server, robots, tools, alltools, makefile, install,"; \
+        echo "    install-tools, rsa, rsa-support, clean, scrub."; \
+        echo "  Specific:"; \
+        echo "    $(SERVER) $(ROBOTS)"; \
+        echo "    $(TOOLS) $(OTHERTOOLS)"
+
+makefile:
+	./configure
+
+patchable:
+	@echo "****** THIS WILL ERASE ALL NON-DISTRIBUTION DATA ******"
+	@echo "******  TO ABORT--PRESS CTRL-C WITHIN 5 SECONDS  ******"
+	@sleep 5
+	@$(MAKE) patchable-real
+
+patchable-real: scrub
+	rm -f etc/config.cache etc/config.log etc/config.status
+	rm -f $(INSTALL_EXES) $(INSTALL_TOOLS_EXES) $(BINDIR)/pped
+	rm -f $(BINDIR)/*.old
+	rm -f $(ETCDIR)/db.players $(ETCDIR)/db.global $(ETCDIR)/planets
+	rm -f $(LOGDIR)/*
+	rm -f Makefile.bak
+	@echo "all:" > Makefile; \
+        echo "	./configure" >> Makefile; \
+        echo "server: all" >> Makefile; \
+        echo "install: all" >> Makefile
+	cd zlib; make clean
+	cd pped; make clean
+
+server: $(SERVER) $(ROBOTS)
+
+robots: $(ROBOTS)
+
+tools: $(TOOLS)
+
+alltools: $(TOOLS) ${OTHERTOOLS}
+
+rsa:
+	cd $(RSADIR); make; cd $(SRVDIR)
+
+rsa-support:
+	-ln -s $(RSADIR)/rsa-server.c
+	-ln -s $(RSADIR)/rsa_util.c
+	-ln -s $(RSADIR)/rsa_utilmp.c
+	-ln -s $(RSADIR)/reserved.c
+libgz:
+	@if [ ! -f zlib/libz.a ]; then\
+            echo "***";\
+            echo "*** You must cd to zlib and make the gz library first.";\
+            echo "***";\
+            exit 1;\
+        fi
+
+ntserv: $(NTSERV_OBJS)
+	${CC} $(CFLAGS) -o ntserv $(NTSERV_OBJS) $(LIBS)
+	-chmod ${INSTMODE} ntserv
+
+daemonII: $(DAEMON_OBJS)
+	${CC} $(CFLAGS) -o daemonII $(DAEMON_OBJS) ${LIBS}
+	-chmod ${INSTMODE} daemonII
+
+robotII: $(ROBOT_OBJS)
+	${CC} $(CFLAGS) -o robotII $(ROBOT_OBJS) $(LIBS)
+	-chmod ${INSTMODE} robotII
+
+listen: $(LISTEN_OBJS)
+	${CC} ${CFLAGS} -o $@ ${LISTEN_OBJS} $(LIBS)
+
+snake:   $(SNAKE_OBJS)
+	/bin/rm -f $@
+	${CC} $(CFLAGS) -o $@ $(SNAKE_OBJS) $(LIBS)
+	-chmod ${INSTMODE} snake
+
+mes:	$(TOOL_MES_OBJS)
+	/bin/rm -f $@
+	${CC} $(CFLAGS) -o $@ ${TOOL_MES_OBJS} $(LIBS)
+
+wm:	$(TOOL_WM_OBJS)
+	/bin/rm -f $@
+	${CC} $(CFLAGS) -o $@ ${TOOL_WM_OBJS} $(LIBS)
+
+xtk:	$(TOOL_XTK_OBJS)
+	/bin/rm -f $@
+	${CC} $(CFLAGS) -o $@ ${TOOL_XTK_OBJS} $(LIBS)
+
+reset:	$(TOOL_RESET_OBJS)
+	/bin/rm -f $@
+	${CC} $(CFLAGS) -o $@ ${TOOL_RESET_OBJS} $(LIBS)
+
+pl:	$(TOOL_PL_OBJS)
+	/bin/rm -f $@
+	${CC} $(CFLAGS) -o $@ ${TOOL_PL_OBJS} $(LIBS)
+
+promo:	$(TOOL_PROMO_OBJS)
+	/bin/rm -f $@
+	${CC} $(CFLAGS) -o $@ ${TOOL_PROMO_OBJS} $(LIBS)
+
+hr:	$(TOOL_HR_OBJS)
+	/bin/rm -f $@
+	${CC} $(CFLAGS) -o $@ ${TOOL_HR_OBJS} $(LIBS)
+
+hs:	$(TOOL_HS_OBJS)
+	/bin/rm -f $@
+	${CC} $(CFLAGS) -o $@ ${TOOL_HS_OBJS} $(LIBS)
+
+heraldry:	$(TOOL_HERALDRY_OBJS)
+	/bin/rm -f $@
+	${CC} $(CFLAGS) -o $@ ${TOOL_HERALDRY_OBJS} $(LIBS)
+
+ds:	$(TOOL_DS_OBJS)
+	/bin/rm -f $@
+	${CC} $(CFLAGS) -o $@ ${TOOL_DS_OBJS} $(LIBS)
+
+trim: ${TOOL_TRIM_OBJS}
+	rm -f $@
+	${CC} $(CFLAGS) -o $@ ${TOOL_TRIM_OBJS} $(LIBS)
+
+install: $(INSTALL_EXES)
+
+install-tools: $(BINDIR)/mes $(BINDIR)/wm $(BINDIR)/reset $(BINDIR)/pl \
+	$(BINDIR)/promo $(BINDIR)/hr $(BINDIR)/hs $(BINDIR)/ds # $(BINDIR)/xtk
+
+$(BINDIR)/ntserv: ntserv
+	-mv $@ $@.old
+	cp ntserv $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/daemonII: daemonII
+	-mv $@ $@.old
+	rm -f $(ETCDIR)/planets
+	touch $(ETCDIR)/planets
+	chmod 600 $(ETCDIR)/planets
+	cp daemonII $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/robotII: robotII
+	-mv $@ $@.old
+	cp robotII $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/listen: listen
+	-mv $@ $@.old
+	cp listen $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/snake: snake
+	-mv $@ $@.old
+	cp snake $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/mes: mes
+	-mv $@ $@.old
+	cp mes $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/wm: wm
+	-mv $@ $@.old
+	cp wm $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/xtk: xtk
+	-mv $@ $@.old
+	cp xtk $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/reset: reset
+	-mv $@ $@.old
+	cp reset $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/pl: pl
+	-mv $@ $@.old
+	cp pl $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/promo: promo
+	-mv $@ $@.old
+	cp promo $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/hr: hr
+	-mv $@ $@.old
+	cp hr $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/hs: hs
+	-mv $@ $@.old
+	cp hs $@
+	chmod ${INSTMODE} $@
+
+$(BINDIR)/ds: ds
+	-mv $@ $@.old
+	cp ds $@
+	chmod ${INSTMODE} $@
+
+#
+#
+
+lint-daemon:
+	lint ${DAEMON_SRCS} 
+
+#
+#
+
+protoize-daemon:
+	protoize -c "${CFLAGS}" -gN ${DAEMON_SRCS}
+
+protoize-ntserv:
+	protoize -c "${CFLAGS}" -gN ${NTSERV_SRCS}
+
+protoize-robotII:
+	protoize -c "${CFLAGS}" -gN ${ROBOT_SRCS}
+
+unprotoize-daemon:
+	unprotoize -c "${CFLAGS}" -N ${DAEMON_SRCS}
+
+unprotoize-ntserv:
+	unprotoize -c "${CFLAGS}" -N ${NTSERV_SRCS}
+
+unprotoize-robotII:
+	unprotoize -c "${CFLAGS}" -N ${ROBOT_SRCS}
+
+#
+#
+
+clean:
+	rm -f *~ *.BAK *.orig *.rej core
+	rm -f $(SERVER) $(ROBOTS) $(TOOLS) $(OTHERTOOLS)
+
+scrub: clean
+	rm -f *.o
+

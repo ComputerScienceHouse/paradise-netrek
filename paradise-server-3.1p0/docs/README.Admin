@@ -1,0 +1,136 @@
+(9/19/94:Brandon)
+
+    QUICK INSTALLATION
+
+    To install the server onto your system, do the following:
+    
+        1. Change your working directory to src/
+        2. execute the script called 'setup'
+        3. follow the instructions, no guarantees!
+        4. execute 'make install'
+    
+    If you have the expected directory structure (as created in the 2.4
+    release) and you are on a common operating system, everything should
+    install appropriately.  Read on for instructions on administrating
+    the server.
+    
+    ADMINISTRATION
+
+    The server expects several files to be available in the appropriate
+    locations.  These locations are based off a root level which is
+    specified with an environment variable of NETREKDIR (Note: if the
+    NETREKDIR environment variable does not exist, some scripts and
+    binaries may check for "../etc/conf.netrekdir" to specify the full
+    path).  The following is an explanation of the different files and
+    directories.
+
+        backups/          - This is where the dbbackup script places
+                            it's files.
+        bin/              - where the binaries and various scripts are
+                            located:
+            daemonII      - the daemon binary.
+            dbbackup      - database backup script
+            faucet +      - used in combination with pl to create the
+                            player listing port, not required.  It is
+                            not distributed with the server (it is
+                            part of Rob Forsman's NetPipes).
+            init.shutdown - callable by the system (shutdown)
+            init.startup  - callable by the system (startup)
+            listen        - the listen process binary
+            mailcluecheck - the script used to mail letters to ejected
+                            people, if MAIL_CLUELETTER is defined in
+                            config.h
+            makemotd      - builds a message of the day with player stats
+            mes +         - tool used by ntstop, not required.
+            ntserv        - ntserv binary
+            ntstart       - script to startup the server
+            ntstop        - script to shutdown the server (with message)
+            pl +          - tool used to give a listing of players
+            robotII       - robot binary, if it doesn't exist no robots
+                            will enter the game.
+            snake         - snake binary, if it doesn't exist no snakes
+                            will enter the game.
+        docs/             - where documents are stored.
+        etc/              - the location of files used by the various
+                            binaries and scripts.
+            ALLOW         - if this file exists the server will ignore
+                            conf.hours as well as DENY and will always
+                            allow access.
+            DENY          - if this file exists and ALLOW does not exist
+                            the server will ignore conf.hours and will
+                            always be closed.
+            clue.letter   - the form letter used by mailcluecheck
+            cluephrases   - the cluephrases file, if it doesn't exist the
+                            server will use a builtin list of phrases.
+            conf.hours    - hour configuration file (access)
+            conf.netrekdir - hardcoded NETREKDIR path.
+            conf.pics     - configuration file for motd pictures.
+                            the format is:
+
+                               <picture location>
+                               <X> <Y> <page>
+
+                            the picture location is based off NETREKDIR.
+                            X and Y coordinates are explanatory, the page
+                            is which page in the MOTD it should appear on.
+            conf.sysdef   - the system configuration file.
+            db.global     - database, globals.
+            db.players    - database, players.
+            motd          - the message of the day.  Pages in the motd
+                            are seperated by:
+
+                                 [newline][tab]@@b
+
+            motd.body     - the body of the motd (without highscores),
+                            used by makemotd to create the actual motd.
+            planets       - planets file.
+            rsa.keys      - a list of rsa keys (ignore without RSA).
+        logs/
+             conquer      - a record of all conquers on the server.
+             daemonII.pid - a log of the current daemonII's process ID
+             eject.log    - a log of ejections via mailcluecheck
+             god.log      - a log of all messages sent to GOD
+             listen.pid   - a log of the current listen's process ID
+             server.log   - a log of the daemon and generic server messages
+             startup.log  - a startup log from ntserv and daemonII processes
+        pics/             - where motd pictures can be located.
+        pped/             - Heath Kehoe's player database editor.
+        rsa/              - the RSA files, these are not required for
+                            server execution.
+        src/              - source code for the server.
+
+     Note that the person who occupies player entry 0 in the player file
+     will *always* be given the rank of Emperor, so make sure the first
+     entry always has a password.
+
+     OPTIONS
+
+     Options can be found in most binaries with the '-h' flag.
+
+     To manually connect a client to the server first run the client
+     and tell it which socket to try:
+
+         netrek.paradise -s <socket, such as 7777>
+
+     On the server machine, enter:
+
+         ntserv -s <same socket> -d <the display the client is on>
+
+     CONTROLS
+
+     The server has some online controls which are available to the
+     administrators, but only if they have the correct royalty.  The
+     first person to be in the database file (0) is always the 'Emperor',
+     which is the highest royalty status.  As an Emperor the player
+     can use the online controls.
+
+     To use the controls you send yourself a message.  To get a current
+     list of controls available send yourself 'help' and then try help
+     on each topic listed, such as 'control help'.
+
+     Note: be cautious on using any of the controls which modifies actual
+     gameplay variables during Tmode.  These modifications will be recorded
+     into the database and will have a global effect on all statistics
+     (for instance, do not give 1000 armies to a player as they will
+     inevitably be dooshed in 10 seconds).
+ 

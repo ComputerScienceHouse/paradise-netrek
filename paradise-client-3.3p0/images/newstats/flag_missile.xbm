@@ -1,0 +1,4 @@
+#define flag_missile_width 4
+#define flag_missile_height 6
+static char flag_missile_bits[] = {
+   0x06, 0x06, 0x06, 0x06, 0x0f, 0x0f};

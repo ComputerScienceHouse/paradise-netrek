@@ -1,0 +1,50 @@
+# Makefile.in for Paradise server src/common 3.1
+# @configure_input@
+
+@SET_MAKE@
+
+bindir=@bindir@
+datadir=@datadir@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+libexecdir=@libexecdir@
+mandir=@mandir@
+prefix=@prefix@
+srcdir=@srcdir@
+top_srcdir=@top_srcdir@
+
+AR=ar
+ARFLAGS=cruv
+RANLIB=@RANLIB@
+
+CC=@CC@
+CPP=@CPP@
+
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@ -I../include @AUTH_DEFS@ @DEFS@ @SETSID@
+LDFLAGS=@LDFLAGS@
+LIBS=@LIBS@ -lm
+
+INSTALL=@INSTALL@
+INSTALL_SCRIPT=@INSTALL_SCRIPT@
+INSTALL_DATA=@INSTALL_DATA@
+
+VPATH=../common:../res-rsa
+
+####
+
+LISTEN_OBJS=listen.o
+
+all: listen
+
+listen: common.a $(LISTEN_OBJS)
+	$(CC) $(CFLAGS) -o $@ $(LISTEN_OBJS) ../common/common.a $(LDFLAGS) $(LIBS)
+
+clean:
+	-rm -f listen $(LISTEN_OBJS)
+
+install:
+	$(INSTALL) listen $(prefix)/bin
+
+distclean:
+	-rm -f Makefile

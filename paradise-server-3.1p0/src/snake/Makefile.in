@@ -1,0 +1,50 @@
+# Makefile.in for Paradise server src/common 3.1
+# @configure_input@
+
+@SET_MAKE@
+
+bindir=@bindir@
+datadir=@datadir@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+libexecdir=@libexecdir@
+mandir=@mandir@
+prefix=@prefix@
+srcdir=@srcdir@
+top_srcdir=@top_srcdir@
+
+AR=ar
+ARFLAGS=cruv
+RANLIB=@RANLIB@
+
+CC=@CC@
+CPP=@CPP@
+
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@ -I../include @AUTH_DEFS@ @DEFS@
+LDFLAGS=@LDFLAGS@
+LIBS=@LIBS@ -lm
+
+INSTALL=@INSTALL@
+INSTALL_SCRIPT=@INSTALL_SCRIPT@
+INSTALL_DATA=@INSTALL_DATA@
+
+VPATH=../common:../res-rsa
+
+####
+
+SNAKE_OBJS=snake.o snakemove.o
+
+all: snake
+
+snake: robot.a common.a $(SNAKE_OBJS)
+	$(CC) $(CFLAGS) -o snake $(SNAKE_OBJS) ../common/robot.a ../common/common.a $(LDFLAGS) $(LIBS)
+
+clean:
+	-rm -f snake $(SNAKE_OBJS)
+
+install:
+	$(INSTALL) snake $(prefix)/bin
+
+distclean:
+	-rm -f Makefile

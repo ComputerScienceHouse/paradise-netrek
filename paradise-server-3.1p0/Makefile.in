@@ -1,0 +1,87 @@
+# top-level Makefile for Paradise
+# @configure_input@
+
+@SET_MAKE@
+
+bindir=@bindir@
+datadir=@datadir@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+libexecdir=@libexecdir@
+mandir=@mandir@
+prefix=@prefix@
+srcdir=@srcdir@
+top_srcdir=@top_srcdir@
+
+AR=ar
+ARFLAGS=cruv
+RANLIB=@RANLIB@
+
+CC=@CC@
+CPP=@CPP@
+
+CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@ -I./src/include
+DEFS=@AUTH_DEFS@ @DEFS@
+LDFLAGS=@LDFLAGS@
+LIBS=@LIBS@ -lm
+
+INSTALL=@INSTALL@
+INSTALL_SCRIPT=@INSTALL_SCRIPT@
+INSTALL_DATA=@INSTALL_DATA@
+
+INSTALL_BLANKS=etc/db.players etc/db.global etc/rsa-exemption \
+               etc/rsa.keys etc/cluephrases logs/server.log logs/conquer \
+	       logs/god.log
+
+INSTALL_COPIES=etc/motd etc/conf.pics etc/ranks.conf \
+               etc/cluephrases etc/conf.hours pics/cd.xbm pics/Mecha.xbm \
+	       pics/enterprise.xbm pics/info.xbm
+
+INSTALL_SCRIPTS=bin/dbbackup bin/init.shutdown bin/init.startup \
+                bin/makemotd bin/ntstart bin/ntstop
+
+all:
+	@cd src && $(MAKE)
+
+clean:
+	@cd src && $(MAKE) clean
+
+install: all
+	@echo "*** Making install directory hierarchy"
+	@if test ! -d $(prefix); then mkdir $(prefix); fi
+	@if test ! -d $(prefix)/etc; then mkdir $(prefix)/etc; fi
+	@if test ! -d $(prefix)/bin; then mkdir $(prefix)/bin; fi
+	@if test ! -d $(prefix)/lib; then mkdir $(prefix)/lib; fi
+	@if test ! -d $(prefix)/logs; then mkdir $(prefix)/logs; fi
+	@if test ! -d $(prefix)/pics; then mkdir $(prefix)/pics; fi
+	@echo "*** Installing binaries"
+# this is tricky.  if $(prefix) == $(srcdir), we don't want to kill our only
+# copy of the scripts.  Some BSD-compatible installs handle this case;
+# some don't.  Instead, install into $${i}.dst, then move that file to
+# the correct destination file.
+	@cd src && $(MAKE) install
+	@for i in $(INSTALL_SCRIPTS); do \
+	  $(INSTALL) $(srcdir)/$${i} $(prefix)/$${i}.dst; \
+	  mv $(prefix)/$${i}.dst $(prefix)/$${i}; \
+	done
+	@echo "*** Installing configuration files (only if needed)"
+	@for i in $(INSTALL_BLANKS); do \
+	  if test ! -r $(prefix)/$${i}; then \
+	    touch $(prefix)/$${i}; \
+	  fi \
+	done
+	@for i in $(INSTALL_COPIES); do \
+	  if test ! -r $(prefix)/$${i}; then \
+	    $(INSTALL_DATA) $(srcdir)/$${i} $(prefix)/$${i}; \
+          fi \
+	done
+	@if test ! -r $(prefix)/etc/conf.sysdef; then \
+	  $(INSTALL_DATA) $(srcdir)/etc/conf.balanced $(prefix)/etc/conf.sysdef; \
+	fi
+
+distclean: clean
+	@cd src && $(MAKE) distclean
+	-rm -f $(INSTALL_SCRIPTS)
+	-rm -f config.*
+	-rm -f Makefile
