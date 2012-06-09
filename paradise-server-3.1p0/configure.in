@@ -67,7 +67,7 @@ AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(fcntl.h limits.h malloc.h sys/file.h sys/ioctl.h unistd.h sys/time.h arpa/inet.h crypt.h)
 
 dnl Check for ZLIB headers
-AC_CHECK_HEADERS(zlib.h, [/bin/true],
+AC_CHECK_HEADERS(zlib.h, [true],
 [
   echo 
   echo "*** Could not find compression library header (zlib.h)."

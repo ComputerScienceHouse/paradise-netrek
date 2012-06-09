@@ -29,3 +29,5 @@ reset
 trim
 wm
 xtk
+.*.swp
+*~

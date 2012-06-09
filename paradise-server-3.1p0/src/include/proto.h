@@ -30,6 +30,8 @@ notice appear in all copies.
 #ifndef PROTO_H
 #define PROTO_H
 
+#include <sys/time.h>
+
 #include "config.h"
 #include "defs.h"
 #include "struct.h"

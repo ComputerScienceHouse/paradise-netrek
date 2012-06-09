@@ -1,0 +1,7 @@
+a.out.dSYM/
+autom4te.cache/
+cscope.in.out
+cscope.out
+cscope.po.out
+configure
+src/daemon/daemonII

@@ -8,6 +8,7 @@
 #define MAIN_H
 
 #include "config.h"
+#include "defs.h"
 
 void err P((char *s, ...));
 void err_sys P((char *s, ...));

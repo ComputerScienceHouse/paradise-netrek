@@ -32,6 +32,12 @@ notice appear in all copies.
 
 #include "config.h"
 #include <limits.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+
+#define P(...) __VA_ARGS__
 
 #ifdef SVR4			/* to get it to work under Solaris [BDyess] */
 #define sigsetmask sigset
