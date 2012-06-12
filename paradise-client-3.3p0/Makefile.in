@@ -15,7 +15,7 @@ SHIP_BITMAP_PATH=@SHIP_BITMAP_PATH@
 
 all:
 	(cd src && $(MAKE))
-	sed -e "s,@MAN_SHIP_BITMAP_PATH@,${SHIP_BITMAP_PATH},g" doc/paradise.1.in > doc/paradise.1
+	sed -e "s,@MAN_SHIP_BITMAP_PATH@,${SHIP_BITMAP_PATH},g" docs/paradise.1.in > docs/paradise.1
 
 install: all
 	-mkdir $(prefix)
@@ -54,7 +54,7 @@ install: all
 	done
 
 	# install the man page
-	$(INSTALL_DATA) doc/paradise.1 $(mandir)/man1/paradise.1
+	$(INSTALL_DATA) docs/paradise.1 $(mandir)/man1/paradise.1
 
 static_images:
 	(cd src && $(MAKE) static_images)
